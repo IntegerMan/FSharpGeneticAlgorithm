@@ -5,9 +5,9 @@ VisualStudioVersion = 16.0.29324.140
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "MattEland.FSharpGeneticAlgorithm.Logic", "MattEland.FSharpGeneticAlgorithm.Logic\MattEland.FSharpGeneticAlgorithm.Logic.fsproj", "{022CF0FD-4C4A-470F-BA5B-48D1FAAE8A1E}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "MattEland.FSharpGeneticAlgorighm.Tests", "MattEland.FSharpGeneticAlgorighm.Tests\MattEland.FSharpGeneticAlgorighm.Tests.fsproj", "{C141938E-E56F-4177-859C-68091CBA18DC}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "MattEland.FSharpGeneticAlgorithm.Tests", "MattEland.FSharpGeneticAlgorighm.Tests\MattEland.FSharpGeneticAlgorithm.Tests.fsproj", "{C141938E-E56F-4177-859C-68091CBA18DC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MattEland.FSharpGeneticAlgorthim.BlazorServer", "MattEland.FSharpGeneticAlgorthim.BlazorServer\MattEland.FSharpGeneticAlgorthim.BlazorServer.csproj", "{B2A03CE8-80A0-4546-BB75-4D6802C66302}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MattEland.FSharpGeneticAlgorithm.BlazorServer", "MattEland.FSharpGeneticAlgorthim.BlazorServer\MattEland.FSharpGeneticAlgorithm.BlazorServer.csproj", "{B2A03CE8-80A0-4546-BB75-4D6802C66302}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

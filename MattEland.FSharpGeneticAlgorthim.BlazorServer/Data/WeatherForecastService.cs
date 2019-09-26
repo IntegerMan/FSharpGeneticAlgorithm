@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MattEland.FSharpGeneticAlgorthim.BlazorServer.Data
+namespace MattEland.FSharpGeneticAlgorithm.BlazorServer.Data
 {
     public class WeatherForecastService
     {

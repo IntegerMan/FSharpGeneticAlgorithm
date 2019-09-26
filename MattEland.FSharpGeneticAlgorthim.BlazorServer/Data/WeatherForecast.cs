@@ -1,6 +1,6 @@
 using System;
 
-namespace MattEland.FSharpGeneticAlgorthim.BlazorServer.Data
+namespace MattEland.FSharpGeneticAlgorithm.BlazorServer.Data
 {
     public class WeatherForecast
     {
