@@ -11,6 +11,4 @@
     member this.HasAcorn = hasAcorn
     override this.Character = 'S'
 
-  let createSquirrel x y = 
-    let pos = newPos x y
-    new Squirrel(pos, false)
+  let createSquirrel pos = new Squirrel(pos, false)
