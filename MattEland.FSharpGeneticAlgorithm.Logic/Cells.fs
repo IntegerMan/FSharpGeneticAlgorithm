@@ -1,6 +1,6 @@
-﻿module Cells
+﻿namespace MattEland.FSharpGeneticAlgorithm.Logic
 
-open Actors
+module Cells =
 
   let printCell char isLastCell =
     if isLastCell then
@@ -8,9 +8,3 @@ open Actors
     else
       printf "%c" char
 
-  let getCellCharacter (x: int32) (y: int32) (actors: Actor seq): char =
-    let mutable char = '.'
-    for actor in actors do
-      if actor.Pos.X = x && actor.Pos.Y = y then
-        char <- actor.Character
-    char

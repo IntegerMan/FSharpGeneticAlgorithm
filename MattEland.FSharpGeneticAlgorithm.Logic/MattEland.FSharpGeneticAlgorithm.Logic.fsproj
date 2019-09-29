@@ -11,4 +11,8 @@
     <Compile Include="Cells.fs" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\MattEland.AI.Neural\MattEland.AI.Neural.fsproj" />
+  </ItemGroup>
+
 </Project>

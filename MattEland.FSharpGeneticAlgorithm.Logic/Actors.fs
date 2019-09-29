@@ -1,5 +1,8 @@
-﻿module Actors
-  open WorldPos
+﻿namespace MattEland.FSharpGeneticAlgorithm.Logic
+
+open MattEland.FSharpGeneticAlgorithm.Logic.WorldPos
+
+module Actors =
 
   [<AbstractClass>]
   type Actor(pos: WorldPos) =

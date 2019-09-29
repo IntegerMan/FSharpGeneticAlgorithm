@@ -1,4 +1,6 @@
-﻿module WorldPos
+﻿namespace MattEland.FSharpGeneticAlgorithm.Logic
+
+module WorldPos =
 
   type WorldPos = {X: int32; Y:int32}
 
