@@ -6,14 +6,19 @@ open MattEland.FSharpGeneticAlgorithm.Logic.WorldPos
 
 module World =
 
-  type World (maxX: int32, maxY: int32, random: Random) = 
-  
-    let getRandomPos: WorldPos =
-      let x = random.Next(maxX) + 1
-      let y = random.Next(maxY) + 1
-      newPos x y
+  let getRandomPos(maxX:int32, maxY:int32, random: Random): WorldPos =
+    let x = random.Next(maxX) + 1
+    let y = random.Next(maxY) + 1
+    newPos x y
 
-    let mutable actors: Actor seq = Seq.empty
+  let generate (maxX:int32, maxY:int32, random: Random): Actor seq =
+    let pos = getRandomPos(maxX, maxY, random)
+    seq {
+      yield createSquirrel pos
+    }
+
+  type World (maxX: int32, maxY: int32, random: Random) = 
+    let actors = generate(maxX, maxY, random)
     member this.Actors = actors
 
     member this.GetCharacterAtCell(x, y) =
@@ -26,10 +31,6 @@ module World =
     member this.MaxX = maxX
     member this.MaxY = maxY
 
-    member this.Generate: Actor seq =
-      actors <- Seq.empty
-      actors <- Seq.append actors [createSquirrel getRandomPos]
-      actors
 
          
     
