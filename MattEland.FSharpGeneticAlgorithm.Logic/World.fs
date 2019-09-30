@@ -30,7 +30,3 @@ module World =
 
     member this.MaxX = maxX
     member this.MaxY = maxY
-
-
-         
-    
