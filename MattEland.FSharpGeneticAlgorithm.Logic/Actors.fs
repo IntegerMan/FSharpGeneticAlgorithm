@@ -6,7 +6,7 @@ module Actors =
 
   [<AbstractClass>]
   type Actor(pos: WorldPos) =
-    member this.Pos = pos
+    member val Pos = pos with get, set
     abstract member Character: char
 
   type Squirrel(pos: WorldPos, hasAcorn: bool) =

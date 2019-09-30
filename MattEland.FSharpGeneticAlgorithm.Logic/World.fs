@@ -52,6 +52,12 @@ module World =
     member this.MaxX = maxX
     member this.MaxY = maxY
 
+    member this.Squirrel = actors.[0]
+    member this.Tree = actors.[1]
+    member this.Doggo = actors.[2]
+    member this.Acorn = actors.[3]
+    member this.Rabbit = actors.[4]
+
     member this.GetCharacterAtCell(x, y) =
       let mutable char = '.'
       for actor in this.Actors do

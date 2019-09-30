@@ -22,7 +22,7 @@ module Display =
 
   let getUserInput(): ConsoleKeyInfo =
     printfn ""
-    printfn "Press R to regenerate or X to exit"
+    printfn "Press Arrow Keys to move, R to regenerate, or X to exit"
   
     Console.ReadKey(true)
   
