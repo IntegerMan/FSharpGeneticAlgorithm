@@ -3,11 +3,11 @@ open MattEland.FSharpGeneticAlgorithm.Logic.World
 open MattEland.FSharpGeneticAlgorithm.ConsoleTestApp.Display
 
 let generateWorld randomizer =
-  new World(8, 8, randomizer)
+  new World(13, 13, randomizer)
   
 [<EntryPoint>]
 let main argv =
-  printfn "F# Console Application Example by Matt Eland"
+  printfn "F# Console Application Tutorial by Matt Eland"
   
   let randomizer = new Random()
 

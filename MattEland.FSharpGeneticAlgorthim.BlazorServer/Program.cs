@@ -1,3 +1,4 @@
+using MattEland.FSharpGeneticAlgorithm.Logic;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
