@@ -11,3 +11,5 @@ module WorldPos =
     let yDiff = abs (posA.Y - posB.Y)
     let result = xDiff <= 1 && yDiff <= 1
     result
+
+  let isSamePos p1 p2 = p1.X = p2.X && p1.Y = p2.Y
