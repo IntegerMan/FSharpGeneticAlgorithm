@@ -1,17 +1,22 @@
-﻿namespace MattEland.FSharpGeneticAlgorithm.Logic
+﻿module MattEland.FSharpGeneticAlgorithm.Logic.Actors
 
 open MattEland.FSharpGeneticAlgorithm.Logic.WorldPos
 
-module Actors =
+type ActorKind =
+  | Squirrel of hasAcorn:bool
+  | Tree
+  | Acorn
+  | Rabbit
+  | Doggo
 
-  [<AbstractClass>]
-  type Actor(pos: WorldPos) =
-    member this.Pos = pos
-    abstract member Character: char
+type Actor =
+  { Pos : WorldPos
+    ActorKind : ActorKind }
 
-  type Squirrel(pos: WorldPos, hasAcorn: bool) =
-    inherit Actor(pos)
-    member this.HasAcorn = hasAcorn
-    override this.Character = 'S'
-
-  let createSquirrel pos = new Squirrel(pos, false)
+let getChar actor =
+  match actor.ActorKind with
+  | Squirrel _ -> 'S'
+  | Tree _ -> 't'
+  | Acorn _ -> 'a'
+  | Rabbit _ -> 'R'
+  | Doggo _ -> 'D'
