@@ -1,27 +1,28 @@
-﻿namespace MattEland.FSharpGeneticAlgorithm.Logic
+﻿module MattEland.FSharpGeneticAlgorithm.Logic.Simulator
 
 open MattEland.FSharpGeneticAlgorithm.Logic.WorldPos
 open MattEland.FSharpGeneticAlgorithm.Logic.World
 open MattEland.FSharpGeneticAlgorithm.Logic.Actors
 
-module Simulator =
+let isValidPos pos (world: World): bool = 
+  pos.X >= 1 && pos.Y >= 1 && pos.X <= world.MaxX && pos.Y <= world.MaxY
 
-  let isValidPos pos (world: World): bool = 
-    pos.X >= 1 && pos.Y >= 1 && pos.X <= world.MaxX && pos.Y <= world.MaxY
+let hasObstacle pos (world: World) : bool =
+  world.Actors
+  |> Seq.exists(fun actor -> pos = actor.Pos)
 
-  let hasObstacle pos (world: World): bool = 
-    let mutable obstructed = false
-    for actor in world.Actors do
-      if isSamePos pos actor.Pos then
-        obstructed <- true
-    obstructed
+let moveActor world actor xDiff yDiff = 
+  let pos = newPos (actor.Pos.X + xDiff) (actor.Pos.Y + yDiff)
 
-  let moveActor (world: World) (actor: Actor) (xDiff: int32) (yDiff: int32): World = 
-    let pos = newPos (actor.Pos.X + xDiff) (actor.Pos.Y + yDiff)
-
-    if (isValidPos pos world) && not (hasObstacle pos world) then
-      actor.Pos <- pos
-
+  if (isValidPos pos world) && not (hasObstacle pos world) then
+    let actor = { actor with Pos = pos }
+    match actor.ActorKind with
+    | Squirrel _ -> { world with Squirrel = actor }
+    | Tree -> { world with Tree = actor }
+    | Acorn -> { world with Acorn = actor }
+    | Rabbit -> { world with Rabbit = actor }
+    | Doggo -> { world with Doggo = actor }
+  else
     world
 
-  // TODO: I'll need a way of simulating an actor's turn
+// TODO: I'll need a way of simulating an actor's turn

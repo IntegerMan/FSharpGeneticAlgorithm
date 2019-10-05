@@ -1,66 +1,71 @@
-﻿namespace MattEland.FSharpGeneticAlgorithm.Logic
+﻿module MattEland.FSharpGeneticAlgorithm.Logic.World
 
 open System
 open MattEland.FSharpGeneticAlgorithm.Logic.Actors
 open MattEland.FSharpGeneticAlgorithm.Logic.WorldPos
 
-module World =
+let getRandomPos(maxX:int32, maxY:int32, getRandom): WorldPos =
+  let x = getRandom maxX
+  let y = getRandom maxY
+  newPos x y
 
-  let getRandomPos(maxX:int32, maxY:int32, random: Random): WorldPos =
-    let x = random.Next(maxX) + 1
-    let y = random.Next(maxY) + 1
-    newPos x y
+let buildItemsArray (maxX:int32, maxY:int32, getRandom): Actor array =
+  [| { Pos = getRandomPos(maxX, maxY, getRandom); ActorKind = Squirrel false }
+     { Pos = getRandomPos(maxX, maxY, getRandom); ActorKind = Tree }
+     { Pos = getRandomPos(maxX, maxY, getRandom); ActorKind = Doggo }
+     { Pos = getRandomPos(maxX, maxY, getRandom); ActorKind = Acorn }
+     { Pos = getRandomPos(maxX, maxY, getRandom); ActorKind = Rabbit }
+  |]
+let hasInvalidlyPlacedItems (items: Actor array, maxX: int32, maxY: int32): bool =
+  let mutable hasIssues = false
 
-  let buildItemsArray (maxX:int32, maxY:int32, random: Random): Actor array =
-    [|
-      createSquirrel (getRandomPos(maxX, maxY, random))
-      createTree (getRandomPos(maxX, maxY, random))
-      createDoggo (getRandomPos(maxX, maxY, random))
-      createAcorn (getRandomPos(maxX, maxY, random))
-      createRabbit (getRandomPos(maxX, maxY, random))
-    |]
+  for itemA in items do
+    // Don't allow items to spawn in corners
+    if (itemA.Pos.X = 1 || itemA.Pos.X = maxX) && (itemA.Pos.Y = 1 || itemA.Pos.Y = maxY) then
+      hasIssues <- true
 
-  let hasInvalidlyPlacedItems (items: Actor array, maxX: int32, maxY: int32): bool =
-    let mutable hasIssues = false
+    for itemB in items do
+      if itemA <> itemB then
 
-    for itemA in items do
-      // Don't allow items to spawn in corners
-      if (itemA.Pos.X = 1 || itemA.Pos.X = maxX) && (itemA.Pos.Y = 1 || itemA.Pos.Y = maxY) then
-        hasIssues <- true
+        // Don't allow two objects to start next to each other
+        if isAdjacentTo itemA.Pos itemB.Pos then
+          hasIssues <- true
+    
+  hasIssues
 
-      for itemB in items do
-        if itemA <> itemB then
+let generate (maxX:int32, maxY:int32, getRandom): Actor array =
+  let mutable items: Actor array = buildItemsArray(maxX, maxY, getRandom)
 
-          // Don't allow two objects to start next to each other
-          if isAdjacentTo itemA.Pos itemB.Pos then
-            hasIssues <- true
-      
-    hasIssues
+  // It's possible to generate items in invalid starting configurations. Make sure we don't do that.
+  while hasInvalidlyPlacedItems(items, maxX, maxY) do
+    items <- buildItemsArray(maxX, maxY, getRandom)
 
-  let generate (maxX:int32, maxY:int32, random: Random): Actor array =
-    let mutable items: Actor array = buildItemsArray(maxX, maxY, random)
+  items
 
-    // It's possible to generate items in invalid starting configurations. Make sure we don't do that.
-    while hasInvalidlyPlacedItems(items, maxX, maxY) do
-      items <- buildItemsArray(maxX, maxY, random)
+type World =
+  { MaxX : int
+    MaxY : int
+    Squirrel : Actor
+    Tree : Actor
+    Doggo : Actor
+    Acorn : Actor
+    Rabbit : Actor }
+  member this.Actors = [| this.Squirrel; this.Tree; this.Doggo; this.Acorn; this.Rabbit |]
+let makeWorld maxX maxY random =
+  let actors = generate(maxX, maxY, random)
+  { MaxX = maxX
+    MaxY = maxY
+    Squirrel = actors.[0]
+    Tree = actors.[1]
+    Doggo = actors.[2]
+    Acorn = actors.[3]
+    Rabbit = actors.[4] }
 
-    items
+let getCharacterAtCell(x, y) (world:World) =
+  let actorAtCell =
+    world.Actors
+    |> Seq.tryFind(fun actor -> actor.Pos.X = x && actor.Pos.Y = y)
 
-  type World (maxX: int32, maxY: int32, random: Random) = 
-    let actors = generate(maxX, maxY, random)
-    member this.Actors = actors
-    member this.MaxX = maxX
-    member this.MaxY = maxY
-
-    member this.Squirrel = actors.[0]
-    member this.Tree = actors.[1]
-    member this.Doggo = actors.[2]
-    member this.Acorn = actors.[3]
-    member this.Rabbit = actors.[4]
-
-    member this.GetCharacterAtCell(x, y) =
-      let mutable char = '.'
-      for actor in this.Actors do
-        if actor.Pos.X = x && actor.Pos.Y = y then
-          char <- actor.Character
-      char
+  match actorAtCell with
+  | Some actor -> getChar actor
+  | None -> '.'
