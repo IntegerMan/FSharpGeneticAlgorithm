@@ -18,8 +18,11 @@ let displayWorld (world: World) =
     let char = world |> getCharacterAtCell(x,y)
     printCell char (x = world.MaxX)
 
-let getUserInput(): ConsoleKeyInfo =
+let getUserInput(world: World): ConsoleKeyInfo =
+  displayWorld world
   printfn ""
   printfn "Press Arrow Keys to move, R to regenerate, or X to exit"
 
-  Console.ReadKey(true)
+  let key = Console.ReadKey(true)
+  Console.Clear()
+  key
