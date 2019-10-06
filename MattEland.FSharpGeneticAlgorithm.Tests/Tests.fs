@@ -1,7 +1,6 @@
 module MattEland.FSharpGeneticAlgorithm.Tests
 
 open Xunit
-
 open MattEland.FSharpGeneticAlgorithm.Logic.WorldPos
 
 [<Theory>]
