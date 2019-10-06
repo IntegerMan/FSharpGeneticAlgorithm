@@ -1,6 +1,7 @@
 module MattEland.FSharpGeneticAlgorithm.Tests
 
 open Xunit
+open FsUnit
 open MattEland.FSharpGeneticAlgorithm.Logic.WorldPos
 
 [<Theory>]
@@ -11,8 +12,5 @@ let ``Point Adjaency Tests`` (x1, y1, x2, y2, expectedAdjacent) =
     let pos1 = newPos x1 y1
     let pos2 = newPos x2 y2
 
-    // Act
-    let isAdjacent = isAdjacentTo pos1 pos2
-
-    // Assert
-    Assert.Equal(expectedAdjacent, isAdjacent)
+    // Act & Assert
+    isAdjacentTo pos1 pos2 |> should equal expectedAdjacent
