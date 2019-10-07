@@ -20,11 +20,11 @@ type World =
   |]
 
 let tryGetActor(x, y) (world:World) =
-  world.Actors |> Seq.tryFind(fun actor -> actor.Pos.X = x && actor.Pos.Y = y)
+  world.Actors 
+  |> Seq.tryFind(fun actor -> actor.IsActive && actor.Pos.X = x && actor.Pos.Y = y)
 
 let getCharacterAtCell(x, y) (world:World) =
-  let actorAtCell = tryGetActor(x,y) world
-  match actorAtCell with
+  match tryGetActor(x,y) world with
   | Some actor -> getChar actor
   | None -> '.'
 

@@ -37,10 +37,8 @@ let moveActor world actor pos =
         if not hasAcorn && otherActor.ActorKind = Acorn then
           { 
             world with 
-            Squirrel = {ActorKind = Squirrel true; Pos = pos}; 
-            // Move the acorn far off the board so we don't collide with anything
-            // TODO: Actually remove it instead
-            Acorn = {world.Acorn with Pos = {X = -999; Y = -999}}
+            Squirrel = {ActorKind = Squirrel true; Pos = pos; IsActive = true} 
+            Acorn = {world.Acorn with IsActive = false}
           }
         else
           performMove

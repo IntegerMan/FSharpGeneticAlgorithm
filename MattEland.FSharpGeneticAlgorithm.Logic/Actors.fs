@@ -10,8 +10,10 @@ type ActorKind =
   | Doggo
 
 type Actor =
-  { Pos : WorldPos
-    ActorKind : ActorKind }
+  { Pos : WorldPos;
+    ActorKind : ActorKind;
+    IsActive : bool
+  }
 
 let getChar actor =
   match actor.ActorKind with

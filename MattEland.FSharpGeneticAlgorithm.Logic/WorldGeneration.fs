@@ -22,11 +22,11 @@ let hasInvalidlyPlacedItems (actors: Actor array, maxX: int32, maxY: int32): boo
   hasIssues
 
 let buildActors (maxX:int32, maxY:int32, getRandom): Actor array =
-  [|  { Pos = getRandomPos(maxX, maxY, getRandom); ActorKind = Squirrel false }
-      { Pos = getRandomPos(maxX, maxY, getRandom); ActorKind = Tree }
-      { Pos = getRandomPos(maxX, maxY, getRandom); ActorKind = Doggo }
-      { Pos = getRandomPos(maxX, maxY, getRandom); ActorKind = Acorn }
-      { Pos = getRandomPos(maxX, maxY, getRandom); ActorKind = Rabbit }
+  [|  { Pos = getRandomPos(maxX, maxY, getRandom); ActorKind = Squirrel false; IsActive = true }
+      { Pos = getRandomPos(maxX, maxY, getRandom); ActorKind = Tree; IsActive = true }
+      { Pos = getRandomPos(maxX, maxY, getRandom); ActorKind = Doggo; IsActive = true }
+      { Pos = getRandomPos(maxX, maxY, getRandom); ActorKind = Acorn; IsActive = true }
+      { Pos = getRandomPos(maxX, maxY, getRandom); ActorKind = Rabbit; IsActive = true }
   |]
 
 let generate (maxX:int32, maxY:int32, getRandom): Actor array =
@@ -52,9 +52,9 @@ let makeTestWorld hasAcorn =
   {
     MaxX = 13; 
     MaxY = 13; 
-    Squirrel = {ActorKind = Squirrel hasAcorn; Pos = {X=1; Y=3}};
-    Tree = {ActorKind = Tree; Pos = {X = 8; Y = 10}};
-    Doggo = {ActorKind = Doggo; Pos = {X = 2; Y = 6}};
-    Acorn = {ActorKind = Acorn; Pos = {X = 5; Y = 7}};
-    Rabbit = {ActorKind = Rabbit; Pos = {X = 11; Y = 8}};
+    Squirrel = {ActorKind = Squirrel hasAcorn; Pos = {X=1; Y=3}; IsActive = true};
+    Tree = {ActorKind = Tree; Pos = {X = 8; Y = 10}; IsActive = true};
+    Doggo = {ActorKind = Doggo; Pos = {X = 2; Y = 6}; IsActive = true};
+    Acorn = {ActorKind = Acorn; Pos = {X = 5; Y = 7}; IsActive = true};
+    Rabbit = {ActorKind = Rabbit; Pos = {X = 11; Y = 8}; IsActive = true};
   }
