@@ -47,3 +47,14 @@ let makeWorld maxX maxY random =
     Doggo = actors.[2]
     Acorn = actors.[3]
     Rabbit = actors.[4] }
+
+let makeTestWorld hasAcorn = 
+  {
+    MaxX = 13; 
+    MaxY = 13; 
+    Squirrel = {ActorKind = Squirrel hasAcorn; Pos = {X=1; Y=3}};
+    Tree = {ActorKind = Tree; Pos = {X = 8; Y = 10}};
+    Doggo = {ActorKind = Doggo; Pos = {X = 2; Y = 6}};
+    Acorn = {ActorKind = Acorn; Pos = {X = 5; Y = 7}};
+    Rabbit = {ActorKind = Rabbit; Pos = {X = 11; Y = 8}};
+  }

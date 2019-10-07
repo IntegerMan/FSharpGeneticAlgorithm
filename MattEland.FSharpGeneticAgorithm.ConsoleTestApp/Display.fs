@@ -13,21 +13,23 @@ let displayWorld (world: World) =
   printfn ""
 
   for y in 1..world.MaxX do
-  for x in 1..world.MaxY do   
-    // Determine which character should exist in this line
-    let char = world |> getCharacterAtCell(x,y)
+    printf "  " // Indent slightly so it is a bit more readable
 
-    // Let's set the overall color
-    match char with
-    | '.' -> Console.ForegroundColor <- ConsoleColor.DarkGreen
-    | 't' -> Console.ForegroundColor <- ConsoleColor.Green
-    | 'a' -> Console.ForegroundColor <- ConsoleColor.DarkYellow
-    | 'S' -> Console.ForegroundColor <- ConsoleColor.Yellow
-    | 'D' -> Console.ForegroundColor <- ConsoleColor.Red
-    | 'R' -> Console.ForegroundColor <- ConsoleColor.Magenta
-    | _ -> Console.ForegroundColor <- ConsoleColor.Gray 
+    for x in 1..world.MaxY do   
+      // Determine which character should exist in this line
+      let char = world |> getCharacterAtCell(x,y)
 
-    printCell char (x = world.MaxX)
+      // Let's set the overall color
+      match char with
+      | '.' -> Console.ForegroundColor <- ConsoleColor.DarkGreen
+      | 't' -> Console.ForegroundColor <- ConsoleColor.Green
+      | 'a' -> Console.ForegroundColor <- ConsoleColor.DarkYellow
+      | 'S' -> Console.ForegroundColor <- ConsoleColor.Yellow
+      | 'D' -> Console.ForegroundColor <- ConsoleColor.Red
+      | 'R' -> Console.ForegroundColor <- ConsoleColor.Magenta
+      | _ -> Console.ForegroundColor <- ConsoleColor.Gray 
+
+      printCell char (x = world.MaxX)
 
   // Ensure we go back to standard format
   Console.ForegroundColor <- ConsoleColor.White

@@ -28,7 +28,7 @@ let getCharacterAtCell(x, y) (world:World) =
   | Some actor -> getChar actor
   | None -> '.'
 
-let isValidPos pos (world: World): bool = 
+let isValidPos pos world = 
   pos.X >= 1 && pos.Y >= 1 && pos.X <= world.MaxX && pos.Y <= world.MaxY
 
 let hasObstacle pos (world: World) : bool =
