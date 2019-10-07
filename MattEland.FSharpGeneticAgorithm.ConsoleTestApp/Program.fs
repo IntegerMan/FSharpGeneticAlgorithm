@@ -34,7 +34,7 @@ let main argv =
 
   let world = makeTestWorld false
 
-  let mutable state = { World = world; Player = Squirrel false}
+  let mutable state = { World = world; Player = Squirrel false; SimState = Simulating}
   let mutable simulating: bool = true
 
   while simulating do

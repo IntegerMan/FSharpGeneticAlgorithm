@@ -34,3 +34,11 @@ let isValidPos pos world =
 let hasObstacle pos (world: World) : bool =
   world.Actors
   |> Seq.exists(fun actor -> pos = actor.Pos)
+
+let getPlayer world playerType =
+  match playerType with 
+  | Squirrel _ -> world.Squirrel
+  | Rabbit _ -> world.Rabbit
+  | Doggo _ -> world.Doggo
+  | Tree _ -> world.Tree
+  | Acorn _ -> world.Acorn

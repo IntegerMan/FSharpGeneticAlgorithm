@@ -6,7 +6,9 @@ open MattEland.FSharpGeneticAlgorithm.Logic.Actors
 open MattEland.FSharpGeneticAlgorithm.Logic.WorldGeneration
 open MattEland.FSharpGeneticAlgorithm.Logic.Commands
 
-type GameState = { World : World; Player : ActorKind }
+type SimulationState = Simulating | Won | Lost
+
+type GameState = { World : World; Player : ActorKind; SimState: SimulationState }
 
 let canEnterActorCell actor target =
   match target with
@@ -15,7 +17,8 @@ let canEnterActorCell actor target =
   | Tree _ -> actor = Squirrel true // Only allow if squirrel has an acorn
   | Acorn _ -> actor = Squirrel false // Only allow if squirrel w/o acorn
 
-let moveActor world actor pos = 
+let moveActor state actor pos = 
+  let world = state.World
   let performMove =
     let actor = { actor with Pos = pos }
     match actor.ActorKind with
@@ -57,20 +60,25 @@ let getCandidates (current: WorldPos, world: World, includeCenter: bool): WorldP
           candidates <- Seq.append candidates [candidatePos]
   candidates
 
-let simulateRabbit (world:World) getRandomNumber: World =
-  let current = world.Rabbit.Pos
-  let movedPos = getCandidates(current, world, false) 
+let moveRandomly state actor getRandomNumber =
+  let current = actor.Pos
+  let movedPos = getCandidates(current, state.World, false) 
                  |> Seq.sortBy(fun _ -> getRandomNumber 1000)
                  |> Seq.head
 
-  moveActor world world.Rabbit movedPos
+  {state with World = moveActor state actor movedPos }
 
-let simulateActors (state: GameState) getRandomNumber: World =
-  simulateRabbit state.World getRandomNumber
+let simulateActors (state: GameState) getRandomNumber =
+  let mutable endState = state
+
+  if state.Player <> Rabbit then
+    endState <- moveRandomly endState endState.World.Rabbit getRandomNumber
+
+  endState
 
 let handlePlayerCommand state command =
   let world = state.World
-  let player = state.World.Squirrel // TODO: Read from state.Player
+  let player = getPlayer world state.Player
   let xDelta =
     match command with
     | MoveLeft | MoveDownLeft | MoveUpLeft -> -1
@@ -85,17 +93,14 @@ let handlePlayerCommand state command =
   let movedPos = {X=player.Pos.X + xDelta; Y=player.Pos.Y + yDelta}
 
   if isValidPos movedPos state.World then
-    {state with World = moveActor world player movedPos}
+    {state with World = moveActor state player movedPos}
   else
     state
     
 let playTurn state getRandomNumber command =
   let world = state.World
-  let newWorld = 
-    match command with 
-    | Restart -> makeWorld world.MaxX world.MaxY getRandomNumber
-    | _ -> 
-      let newState = handlePlayerCommand state command 
-      simulateActors newState getRandomNumber
-
-  { state with World = newWorld }
+  match command with 
+  | Restart -> { World = makeWorld world.MaxX world.MaxY getRandomNumber; SimState = Simulating ; Player = state.Player }
+  | _ -> 
+    let newState = handlePlayerCommand state command 
+    simulateActors newState getRandomNumber
