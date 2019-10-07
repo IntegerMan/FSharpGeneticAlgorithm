@@ -1,6 +1,8 @@
 ﻿open System
 open MattEland.FSharpGeneticAlgorithm.Logic.World
 open MattEland.FSharpGeneticAlgorithm.Logic.Simulator
+open MattEland.FSharpGeneticAlgorithm.Logic.WorldGeneration
+open MattEland.FSharpGeneticAlgorithm.Logic.Commands
 open MattEland.FSharpGeneticAlgorithm.ConsoleTestApp.Display
   
 type Command =
@@ -27,7 +29,7 @@ let main argv =
   printfn "F# Console Application Tutorial by Matt Eland"
   
   let getRandomNumber =
-    let r = Random()
+    let r = Random(42)
     fun max -> (r.Next max) + 1
 
   let world = makeWorld 13 13 getRandomNumber

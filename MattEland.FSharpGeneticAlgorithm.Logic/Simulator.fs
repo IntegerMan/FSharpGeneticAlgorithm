@@ -3,15 +3,10 @@
 open MattEland.FSharpGeneticAlgorithm.Logic.WorldPos
 open MattEland.FSharpGeneticAlgorithm.Logic.World
 open MattEland.FSharpGeneticAlgorithm.Logic.Actors
+open MattEland.FSharpGeneticAlgorithm.Logic.WorldGeneration
+open MattEland.FSharpGeneticAlgorithm.Logic.Commands
 
 type GameState = { World : World; Player : Actor }
-
-let isValidPos pos (world: World): bool = 
-  pos.X >= 1 && pos.Y >= 1 && pos.X <= world.MaxX && pos.Y <= world.MaxY
-
-let hasObstacle pos (world: World) : bool =
-  world.Actors
-  |> Seq.exists(fun actor -> pos = actor.Pos)
 
 let moveActor world actor xDiff yDiff = 
   let pos = newPos (actor.Pos.X + xDiff) (actor.Pos.Y + yDiff)
@@ -27,13 +22,10 @@ let moveActor world actor xDiff yDiff =
   else
     world
 
-type GameCommand =
-  | MoveLeft | MoveRight
-  | MoveUp | MoveDown
-  | MoveUpLeft | MoveUpRight
-  | MoveDownLeft | MoveDownRight
-  | Wait
-  | Restart
+let simulateRabbit (world:World) getRandomNumber: World =
+  let movedPos = newPos 1 1
+  let newRabbit = {world.Rabbit with Pos = movedPos}
+  { world with Rabbit = newRabbit }
 
 let playTurn state player getRandomNumber command =
   let world = state.World
@@ -52,5 +44,3 @@ let playTurn state player getRandomNumber command =
   | Restart ->
     let world = makeWorld 13 13 getRandomNumber
     { World = world; Player = world.Squirrel }
-
-// TODO: I'll need a way of simulating an actor's turn
