@@ -8,10 +8,15 @@ open MattEland.FSharpGeneticAlgorithm.Logic.Commands
 
 type GameState = { World : World; Player : ActorKind }
 
-let moveActor world actor xDiff yDiff = 
-  let pos = newPos (actor.Pos.X + xDiff) (actor.Pos.Y + yDiff)
+let canEnterActorCell actor target =
+  match target with
+  | Rabbit | Squirrel _ -> actor = Doggo // Dog can eat the squirrel or rabbit
+  | Doggo _ -> false // Nobody bugs the dog
+  | Tree _ -> actor = Squirrel true // Only allow if squirrel has an acorn
+  | Acorn _ -> actor = Squirrel false // Only allow if squirrel w/o acorn
 
-  if (isValidPos pos world) && not (hasObstacle pos world) then
+let moveActor world actor pos = 
+  let performMove =
     let actor = { actor with Pos = pos }
     match actor.ActorKind with
     | Squirrel _ -> { world with Squirrel = actor }
@@ -19,8 +24,29 @@ let moveActor world actor xDiff yDiff =
     | Acorn -> { world with Acorn = actor }
     | Rabbit -> { world with Rabbit = actor }
     | Doggo -> { world with Doggo = actor }
-  else
-    world
+
+  let target = tryGetActor(pos.X, pos.Y) world
+
+  match target with
+  | None -> performMove
+  | Some otherActor ->
+    if otherActor <> actor && canEnterActorCell actor.ActorKind otherActor.ActorKind then 
+
+      match actor.ActorKind with 
+      | Squirrel hasAcorn -> 
+        if not hasAcorn && otherActor.ActorKind = Acorn then
+          { 
+            world with 
+            Squirrel = {ActorKind = Squirrel true; Pos = pos}; 
+            // Move the acorn far off the board so we don't collide with anything
+            // TODO: Actually remove it instead
+            Acorn = {world.Acorn with Pos = {X = -999; Y = -999}}
+          }
+        else
+          performMove
+      | _ -> performMove
+    else
+      world
 
 let getCandidates (current: WorldPos, world: World, includeCenter: bool): WorldPos seq =
   let mutable candidates: WorldPos seq = Seq.empty
@@ -38,24 +64,32 @@ let simulateRabbit (world:World) getRandomNumber: World =
   let movedPos = getCandidates(current, world, false) 
                  |> Seq.sortBy(fun _ -> getRandomNumber 1000)
                  |> Seq.head
-  { world with Rabbit = {world.Rabbit with Pos = movedPos}}
+
+  moveActor world world.Rabbit movedPos
 
 let simulateActors (state: GameState) getRandomNumber: World =
   simulateRabbit state.World getRandomNumber
 
 let handlePlayerCommand state command =
   let world = state.World
-  let player = state.World.Squirrel
-  match command with 
-  | MoveLeft -> { state with World = moveActor world player -1 0 }
-  | MoveRight -> { state with World = moveActor world player 1 0 } 
-  | MoveUp -> { state with World = moveActor world player 0 -1 } 
-  | MoveDown -> { state with World = moveActor world player 0 1 }
-  | MoveUpLeft  -> { state with World = moveActor world player -1 -1 }
-  | MoveUpRight -> { state with World = moveActor world player 1 -1 }
-  | MoveDownLeft -> { state with World = moveActor world player -1 1 } 
-  | MoveDownRight -> { state with World = moveActor world player 1 1 }
-  | _ -> state
+  let player = state.World.Squirrel // TODO: Read from state.Player
+  let xDelta =
+    match command with
+    | MoveLeft | MoveDownLeft | MoveUpLeft -> -1
+    | MoveRight | MoveDownRight | MoveUpRight -> 1
+    | _ -> 0
+  let yDelta =
+    match command with
+    | MoveUpLeft | MoveUp | MoveUpRight -> -1
+    | MoveDownLeft | MoveDown | MoveDownRight -> 1
+    | _ -> 0
+
+  let movedPos = {X=player.Pos.X + xDelta; Y=player.Pos.Y + yDelta}
+
+  if isValidPos movedPos state.World then
+    {state with World = moveActor world player movedPos}
+  else
+    state
     
 let playTurn state getRandomNumber command =
   let world = state.World

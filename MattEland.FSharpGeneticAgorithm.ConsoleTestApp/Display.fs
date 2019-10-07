@@ -24,7 +24,7 @@ let displayWorld (world: World) =
       | '.' -> Console.ForegroundColor <- ConsoleColor.DarkGreen
       | 't' -> Console.ForegroundColor <- ConsoleColor.Green
       | 'a' -> Console.ForegroundColor <- ConsoleColor.DarkYellow
-      | 'S' -> Console.ForegroundColor <- ConsoleColor.Yellow
+      | 'S' | 's' -> Console.ForegroundColor <- ConsoleColor.Yellow
       | 'D' -> Console.ForegroundColor <- ConsoleColor.Red
       | 'R' -> Console.ForegroundColor <- ConsoleColor.Magenta
       | _ -> Console.ForegroundColor <- ConsoleColor.Gray 

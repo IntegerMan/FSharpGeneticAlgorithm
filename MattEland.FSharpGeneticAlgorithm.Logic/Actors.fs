@@ -15,7 +15,7 @@ type Actor =
 
 let getChar actor =
   match actor.ActorKind with
-  | Squirrel _ -> 'S'
+  | Squirrel hasAcorn -> match hasAcorn with | true -> 'S' | false -> 's'
   | Tree _ -> 't'
   | Acorn _ -> 'a'
   | Rabbit _ -> 'R'

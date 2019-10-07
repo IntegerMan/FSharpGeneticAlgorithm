@@ -19,11 +19,11 @@ type World =
     this.Rabbit 
   |]
 
-let getCharacterAtCell(x, y) (world:World) =
-  let actorAtCell =
-    world.Actors
-    |> Seq.tryFind(fun actor -> actor.Pos.X = x && actor.Pos.Y = y)
+let tryGetActor(x, y) (world:World) =
+  world.Actors |> Seq.tryFind(fun actor -> actor.Pos.X = x && actor.Pos.Y = y)
 
+let getCharacterAtCell(x, y) (world:World) =
+  let actorAtCell = tryGetActor(x,y) world
   match actorAtCell with
   | Some actor -> getChar actor
   | None -> '.'
