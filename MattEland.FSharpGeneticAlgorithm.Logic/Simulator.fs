@@ -36,8 +36,22 @@ let moveActor state actor pos =
     if otherActor <> actor && canEnterActorCell actor.ActorKind otherActor.ActorKind then 
 
       match actor.ActorKind with 
+      | Doggo -> 
+          if otherActor.ActorKind = Rabbit then
+            {state with World = {world with
+              Rabbit = {world.Rabbit with IsActive = false}
+              Doggo = {world.Doggo with Pos = pos}
+            }}
+          else
+            {state with SimState = Lost; World = {world with
+              Squirrel = {world.Squirrel with IsActive = false}
+              Doggo = {world.Doggo with Pos = pos}
+              }
+            }
+
       | Squirrel hasAcorn -> 
-        if not hasAcorn && otherActor.ActorKind = Acorn then
+        if not hasAcorn && otherActor.ActorKind = Acorn && not otherActor.IsActive then
+          // Moving to the acorn for the first time should give the squirrel the acorn
           {state with World =
             { 
               world with 
@@ -46,6 +60,7 @@ let moveActor state actor pos =
             }
           }
         else if hasAcorn && otherActor.ActorKind = Tree then
+          // Moving to the tree with the acorn - this should win the game
           {
             state with SimState = Won; World = { 
               world with Squirrel = {ActorKind = Squirrel true; Pos = pos; IsActive = true} 
@@ -76,12 +91,22 @@ let moveRandomly state actor getRandomNumber =
 
   moveActor state actor movedPos
 
+let simulateDoggo (state: GameState) =
+  let doggo = state.World.Doggo
+  let rabbit = state.World.Rabbit
+  let squirrel = state.World.Squirrel
+
+  // Eat any adjacent actor
+  if rabbit.IsActive && isAdjacentTo doggo.Pos rabbit.Pos then
+    moveActor state doggo rabbit.Pos
+  else if squirrel.IsActive && isAdjacentTo doggo.Pos squirrel.Pos then
+    moveActor state doggo squirrel.Pos
+  else
+    state
+
 let simulateActors (state: GameState) getRandomNumber =
-  let mutable endState = state
-
-  endState <- moveRandomly endState endState.World.Rabbit getRandomNumber
-
-  endState
+  moveRandomly state state.World.Rabbit getRandomNumber 
+  |>  simulateDoggo
 
 let handlePlayerCommand state command =
   let player = state.World.Squirrel

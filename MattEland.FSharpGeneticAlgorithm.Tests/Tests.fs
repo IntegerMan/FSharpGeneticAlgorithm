@@ -63,3 +63,21 @@ let ``Squirrel Getting Acorn to Tree Should Win Game`` () =
   // Assert
   newState.World.Squirrel.Pos |> should equal world.Tree.Pos
   newState.SimState |> should equal Won
+
+  
+[<Fact>]
+let ``Squirrel Moving Next to Dog Should End With Squirrel Eaten`` () =
+  // Arrange
+  let randomizer = new Random(42)
+  let customSquirrel = {Pos=newPos 3 6; ActorKind = Squirrel false; IsActive = true}
+  let world: World = {(makeTestWorld false) with Squirrel = customSquirrel}
+  let state: GameState = {World=world; SimState=Simulating}
+    
+  // Act
+  let newState = simulateActors state randomizer.Next
+  
+  // Assert
+  newState.World.Doggo.Pos |> should equal world.Squirrel.Pos
+  newState.World.Squirrel.IsActive |> should equal false
+  newState.SimState |> should equal Lost
+  
