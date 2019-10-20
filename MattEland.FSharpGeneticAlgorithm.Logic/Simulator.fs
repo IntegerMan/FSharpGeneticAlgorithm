@@ -3,12 +3,12 @@
 open MattEland.FSharpGeneticAlgorithm.Logic.WorldPos
 open MattEland.FSharpGeneticAlgorithm.Logic.World
 open MattEland.FSharpGeneticAlgorithm.Logic.Actors
-open MattEland.FSharpGeneticAlgorithm.Logic.WorldGeneration
 open MattEland.FSharpGeneticAlgorithm.Logic.Commands
+open MattEland.FSharpGeneticAlgorithm.Logic.WorldGeneration
 
 type SimulationState = Simulating | Won | Lost
 
-type GameState = { World : World; Player : ActorKind; SimState: SimulationState }
+type GameState = { World : World; SimState: SimulationState }
 
 let canEnterActorCell actor target =
   match target with
@@ -71,14 +71,12 @@ let moveRandomly state actor getRandomNumber =
 let simulateActors (state: GameState) getRandomNumber =
   let mutable endState = state
 
-  if state.Player <> Rabbit then
-    endState <- moveRandomly endState endState.World.Rabbit getRandomNumber
+  endState <- moveRandomly endState endState.World.Rabbit getRandomNumber
 
   endState
 
 let handlePlayerCommand state command =
-  let world = state.World
-  let player = getPlayer world state.Player
+  let player = state.World.Squirrel
   let xDelta =
     match command with
     | MoveLeft | MoveDownLeft | MoveUpLeft -> -1
@@ -100,7 +98,7 @@ let handlePlayerCommand state command =
 let playTurn state getRandomNumber command =
   let world = state.World
   match command with 
-  | Restart -> { World = makeWorld world.MaxX world.MaxY getRandomNumber; SimState = Simulating ; Player = state.Player }
+  | Restart -> { World = makeWorld world.MaxX world.MaxY getRandomNumber; SimState = Simulating }
   | _ -> 
     let newState = handlePlayerCommand state command 
     simulateActors newState getRandomNumber

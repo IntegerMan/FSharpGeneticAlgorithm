@@ -2,6 +2,7 @@
 
 open System
 open MattEland.FSharpGeneticAlgorithm.Logic.World
+open MattEland.FSharpGeneticAlgorithm.Logic.Simulator
 
 let printCell char isLastCell =
   if isLastCell then
@@ -34,10 +35,14 @@ let displayWorld (world: World) =
   // Ensure we go back to standard format
   Console.ForegroundColor <- ConsoleColor.White
 
-let getUserInput(world: World): ConsoleKeyInfo =
-  displayWorld world
+let getUserInput(state: GameState): ConsoleKeyInfo =
+  displayWorld state.World
   printfn ""
-  printfn "Press Arrow Keys to move, R to regenerate, or X to exit"
+  
+  match state.SimState with
+  | Simulating -> printfn "Press Arrow Keys to move, R to regenerate, or X to exit"
+  | Won -> printfn "Squirrel Returned Home with the Acorn! Press R to reload or X to exit."
+  | Lost -> printfn "Simulation ended: Squirrel died. Press R to reload or X to exit."
 
   let key = Console.ReadKey(true)
   Console.Clear()

@@ -34,11 +34,11 @@ let main argv =
 
   let world = makeTestWorld false
 
-  let mutable state = { World = world; Player = Squirrel false; SimState = Simulating}
+  let mutable state = { World = world; SimState = Simulating}
   let mutable simulating: bool = true
 
   while simulating do
-    let userCommand = getUserInput(state.World) |> tryParseInput
+    let userCommand = getUserInput(state) |> tryParseInput
 
     match userCommand with
     | Some command -> 

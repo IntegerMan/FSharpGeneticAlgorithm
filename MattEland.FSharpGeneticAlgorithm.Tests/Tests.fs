@@ -8,6 +8,7 @@ open MattEland.FSharpGeneticAlgorithm.Logic.Actors
 open MattEland.FSharpGeneticAlgorithm.Logic.World
 open MattEland.FSharpGeneticAlgorithm.Logic.WorldGeneration
 open MattEland.FSharpGeneticAlgorithm.Logic.Simulator
+open MattEland.FSharpGeneticAlgorithm.Logic.Commands
 
 [<Theory>]
 [<InlineData(4, 2, 4, 1, true)>]
@@ -23,15 +24,30 @@ let ``Point Adjaency Tests`` (x1, y1, x2, y2, expectedAdjacent) =
 [<Fact>]
 let ``Rabbit should move randomly`` () =
   // Arrange
-  let expectedPos = newPos 1 1
   let randomizer = new Random(42)
   let world: World = makeTestWorld false
+  let state: GameState = {World=world; SimState=SimulationState.Simulating}
+  let originalPos = state.World.Rabbit.Pos
 
   // Act
-  let newWorld = simulateRabbit world randomizer
+  let newWorld = simulateActors state randomizer.Next
 
   // Assert
-  newWorld.Rabbit.Pos |> should equal expectedPos
+  newWorld.World.Rabbit.Pos |> should not' (equal originalPos)
 
+  
+[<Fact>]
+let ``Squirrel Getting Acorn Should Change how it Displays`` () =
+  // Arrange
+  let customSquirrel = {Pos=newPos 6 7; ActorKind = Squirrel false; IsActive = true}
+  let world: World = {(makeTestWorld false) with Squirrel = customSquirrel}
+  let state: GameState = {World=world; SimState=SimulationState.Simulating}
+  let command: GameCommand = MoveLeft
+  
+  // Act
+  let newState = handlePlayerCommand state command
+
+  // Assert
+  newState.World.Squirrel.ActorKind |> should equal (Squirrel true)
 
 
