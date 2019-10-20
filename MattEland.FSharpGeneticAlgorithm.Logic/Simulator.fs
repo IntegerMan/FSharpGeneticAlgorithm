@@ -22,11 +22,11 @@ let moveActor state actor pos =
   let performMove =
     let actor = { actor with Pos = pos }
     match actor.ActorKind with
-    | Squirrel _ -> { world with Squirrel = actor }
-    | Tree -> { world with Tree = actor }
-    | Acorn -> { world with Acorn = actor }
-    | Rabbit -> { world with Rabbit = actor }
-    | Doggo -> { world with Doggo = actor }
+    | Squirrel _ -> { state with World={world with Squirrel = actor }}
+    | Tree -> { state with World={world with Tree = actor }}
+    | Acorn -> { state with World={world with Acorn = actor }}
+    | Rabbit -> { state with World={world with Rabbit = actor }}
+    | Doggo -> { state with World={world with Doggo = actor }}
 
   let target = tryGetActor(pos.X, pos.Y) world
 
@@ -38,16 +38,24 @@ let moveActor state actor pos =
       match actor.ActorKind with 
       | Squirrel hasAcorn -> 
         if not hasAcorn && otherActor.ActorKind = Acorn then
-          { 
-            world with 
-            Squirrel = {ActorKind = Squirrel true; Pos = pos; IsActive = true} 
-            Acorn = {world.Acorn with IsActive = false}
+          {state with World =
+            { 
+              world with 
+              Squirrel = {ActorKind = Squirrel true; Pos = pos; IsActive = true} 
+              Acorn = {world.Acorn with IsActive = false}
+            }
+          }
+        else if hasAcorn && otherActor.ActorKind = Tree then
+          {
+            state with SimState = Won; World = { 
+              world with Squirrel = {ActorKind = Squirrel true; Pos = pos; IsActive = true} 
+            }
           }
         else
           performMove
       | _ -> performMove
     else
-      world
+      state
 
 let getCandidates (current: WorldPos, world: World, includeCenter: bool): WorldPos seq =
   let mutable candidates: WorldPos seq = Seq.empty
@@ -66,7 +74,7 @@ let moveRandomly state actor getRandomNumber =
                  |> Seq.sortBy(fun _ -> getRandomNumber 1000)
                  |> Seq.head
 
-  {state with World = moveActor state actor movedPos }
+  moveActor state actor movedPos
 
 let simulateActors (state: GameState) getRandomNumber =
   let mutable endState = state
@@ -91,7 +99,7 @@ let handlePlayerCommand state command =
   let movedPos = {X=player.Pos.X + xDelta; Y=player.Pos.Y + yDelta}
 
   if isValidPos movedPos state.World then
-    {state with World = moveActor state player movedPos}
+    moveActor state player movedPos
   else
     state
     
@@ -100,5 +108,8 @@ let playTurn state getRandomNumber command =
   match command with 
   | Restart -> { World = makeWorld world.MaxX world.MaxY getRandomNumber; SimState = Simulating }
   | _ -> 
-    let newState = handlePlayerCommand state command 
-    simulateActors newState getRandomNumber
+    match state.SimState with
+    | Simulating -> 
+      let newState = handlePlayerCommand state command 
+      simulateActors newState getRandomNumber
+    | _ -> state

@@ -26,7 +26,7 @@ let ``Rabbit should move randomly`` () =
   // Arrange
   let randomizer = new Random(42)
   let world: World = makeTestWorld false
-  let state: GameState = {World=world; SimState=SimulationState.Simulating}
+  let state: GameState = {World=world; SimState=Simulating}
   let originalPos = state.World.Rabbit.Pos
 
   // Act
@@ -34,14 +34,13 @@ let ``Rabbit should move randomly`` () =
 
   // Assert
   newWorld.World.Rabbit.Pos |> should not' (equal originalPos)
-
   
 [<Fact>]
 let ``Squirrel Getting Acorn Should Change how it Displays`` () =
   // Arrange
   let customSquirrel = {Pos=newPos 6 7; ActorKind = Squirrel false; IsActive = true}
   let world: World = {(makeTestWorld false) with Squirrel = customSquirrel}
-  let state: GameState = {World=world; SimState=SimulationState.Simulating}
+  let state: GameState = {World=world; SimState=Simulating}
   let command: GameCommand = MoveLeft
   
   // Act
@@ -50,4 +49,17 @@ let ``Squirrel Getting Acorn Should Change how it Displays`` () =
   // Assert
   newState.World.Squirrel.ActorKind |> should equal (Squirrel true)
 
+[<Fact>]
+let ``Squirrel Getting Acorn to Tree Should Win Game`` () =
+  // Arrange
+  let customSquirrel = {Pos=newPos 9 10; ActorKind = Squirrel true; IsActive = true}
+  let world: World = {(makeTestWorld false) with Squirrel = customSquirrel}
+  let state: GameState = {World=world; SimState=Simulating}
+  let command: GameCommand = MoveLeft
+  
+  // Act
+  let newState = handlePlayerCommand state command
 
+  // Assert
+  newState.World.Squirrel.Pos |> should equal world.Tree.Pos
+  newState.SimState |> should equal Won
