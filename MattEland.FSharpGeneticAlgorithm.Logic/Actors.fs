@@ -10,12 +10,14 @@ type ActorKind =
   | Doggo
 
 type Actor =
-  { Pos : WorldPos
-    ActorKind : ActorKind }
+  { Pos : WorldPos;
+    ActorKind : ActorKind;
+    IsActive : bool
+  }
 
 let getChar actor =
   match actor.ActorKind with
-  | Squirrel _ -> 'S'
+  | Squirrel hasAcorn -> match hasAcorn with | true -> 'S' | false -> 's'
   | Tree _ -> 't'
   | Acorn _ -> 'a'
   | Rabbit _ -> 'R'

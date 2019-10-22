@@ -8,6 +8,8 @@
     <Compile Include="WorldPos.fs" />
     <Compile Include="Actors.fs" />
     <Compile Include="World.fs" />
+    <Compile Include="WorldGeneration.fs" />
+    <Compile Include="Commands.fs" />
     <Compile Include="Simulator.fs" />
   </ItemGroup>
 

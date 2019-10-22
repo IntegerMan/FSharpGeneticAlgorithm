@@ -1,6 +1,7 @@
 ﻿open System
-open MattEland.FSharpGeneticAlgorithm.Logic.World
 open MattEland.FSharpGeneticAlgorithm.Logic.Simulator
+open MattEland.FSharpGeneticAlgorithm.Logic.WorldGeneration
+open MattEland.FSharpGeneticAlgorithm.Logic.Commands
 open MattEland.FSharpGeneticAlgorithm.ConsoleTestApp.Display
   
 type Command =
@@ -30,20 +31,19 @@ let main argv =
     let r = Random()
     fun max -> (r.Next max) + 1
 
-  let world = makeWorld 13 13 getRandomNumber
+  let world = makeTestWorld false
 
-  let mutable state = { World = world; Player = world.Squirrel }
+  let mutable state = { World = world; SimState = Simulating; TurnsLeft=30}
   let mutable simulating: bool = true
 
   while simulating do
-    let player = state.World.Squirrel
-    let userCommand = getUserInput(state.World) |> tryParseInput
+    let userCommand = getUserInput(state) |> tryParseInput
 
     match userCommand with
     | Some command -> 
       match command with 
       | Exit -> simulating <- false
-      | Action gameCommand -> state <- playTurn state player getRandomNumber gameCommand
+      | Action gameCommand -> state <- playTurn state getRandomNumber gameCommand
     | None -> printfn "Invalid input"
     
   0 // return an integer exit code
