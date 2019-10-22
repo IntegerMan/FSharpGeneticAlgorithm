@@ -1,5 +1,4 @@
 ﻿open System
-open MattEland.FSharpGeneticAlgorithm.Logic.Actors
 open MattEland.FSharpGeneticAlgorithm.Logic.Simulator
 open MattEland.FSharpGeneticAlgorithm.Logic.WorldGeneration
 open MattEland.FSharpGeneticAlgorithm.Logic.Commands
@@ -34,7 +33,7 @@ let main argv =
 
   let world = makeTestWorld false
 
-  let mutable state = { World = world; SimState = Simulating}
+  let mutable state = { World = world; SimState = Simulating; TurnsLeft=30}
   let mutable simulating: bool = true
 
   while simulating do

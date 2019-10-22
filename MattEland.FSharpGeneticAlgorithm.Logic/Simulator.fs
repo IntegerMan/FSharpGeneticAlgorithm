@@ -8,7 +8,7 @@ open MattEland.FSharpGeneticAlgorithm.Logic.WorldGeneration
 
 type SimulationState = Simulating | Won | Lost
 
-type GameState = { World : World; SimState: SimulationState }
+type GameState = { World : World; SimState: SimulationState; TurnsLeft: int}
 
 let canEnterActorCell actor target =
   match target with
@@ -19,6 +19,7 @@ let canEnterActorCell actor target =
 
 let moveActor state actor pos = 
   let world = state.World
+
   let performMove =
     let actor = { actor with Pos = pos }
     match actor.ActorKind with
@@ -28,46 +29,48 @@ let moveActor state actor pos =
     | Rabbit -> { state with World={world with Rabbit = actor }}
     | Doggo -> { state with World={world with Doggo = actor }}
 
+  let handleDogMove state otherActor =
+    if otherActor.ActorKind = Rabbit then
+      {state with World = {world with
+        Rabbit = {world.Rabbit with IsActive = false}
+        Doggo = {world.Doggo with Pos = pos}
+      }}
+    else
+      {state with SimState = Lost; World = {world with
+        Squirrel = {world.Squirrel with IsActive = false}
+        Doggo = {world.Doggo with Pos = pos}
+        }
+      }
+
+  let handleSquirrelMove otherActor hasAcorn =
+    if not hasAcorn && otherActor.ActorKind = Acorn && otherActor.IsActive then
+      // Moving to the acorn for the first time should give the squirrel the acorn
+      {state with World =
+        { 
+          world with 
+          Squirrel = {ActorKind = Squirrel true; Pos = pos; IsActive = true} 
+          Acorn = {world.Acorn with IsActive = false}
+        }
+      }
+    else if hasAcorn && otherActor.ActorKind = Tree then
+      // Moving to the tree with the acorn - this should win the game
+      {
+        state with SimState = Won; World = { 
+          world with Squirrel = {ActorKind = Squirrel true; Pos = pos; IsActive = true} 
+        }
+      }
+    else
+      performMove
+
   let target = tryGetActor(pos.X, pos.Y) world
 
   match target with
   | None -> performMove
   | Some otherActor ->
     if otherActor <> actor && canEnterActorCell actor.ActorKind otherActor.ActorKind then 
-
       match actor.ActorKind with 
-      | Doggo -> 
-          if otherActor.ActorKind = Rabbit then
-            {state with World = {world with
-              Rabbit = {world.Rabbit with IsActive = false}
-              Doggo = {world.Doggo with Pos = pos}
-            }}
-          else
-            {state with SimState = Lost; World = {world with
-              Squirrel = {world.Squirrel with IsActive = false}
-              Doggo = {world.Doggo with Pos = pos}
-              }
-            }
-
-      | Squirrel hasAcorn -> 
-        if not hasAcorn && otherActor.ActorKind = Acorn && not otherActor.IsActive then
-          // Moving to the acorn for the first time should give the squirrel the acorn
-          {state with World =
-            { 
-              world with 
-              Squirrel = {ActorKind = Squirrel true; Pos = pos; IsActive = true} 
-              Acorn = {world.Acorn with IsActive = false}
-            }
-          }
-        else if hasAcorn && otherActor.ActorKind = Tree then
-          // Moving to the tree with the acorn - this should win the game
-          {
-            state with SimState = Won; World = { 
-              world with Squirrel = {ActorKind = Squirrel true; Pos = pos; IsActive = true} 
-            }
-          }
-        else
-          performMove
+      | Doggo -> handleDogMove state otherActor
+      | Squirrel hasAcorn -> handleSquirrelMove otherActor hasAcorn
       | _ -> performMove
     else
       state
@@ -104,9 +107,19 @@ let simulateDoggo (state: GameState) =
   else
     state
 
+let decreaseTimer (state: GameState) =
+  if state.SimState = Simulating then
+    if state.TurnsLeft > 0 then
+      {state with TurnsLeft = state.TurnsLeft - 1}
+    else
+      {state with TurnsLeft = 0; SimState = Lost}
+  else
+    state
+
 let simulateActors (state: GameState) getRandomNumber =
   moveRandomly state state.World.Rabbit getRandomNumber 
-  |>  simulateDoggo
+  |> simulateDoggo
+  |> decreaseTimer
 
 let handlePlayerCommand state command =
   let player = state.World.Squirrel
@@ -131,7 +144,7 @@ let handlePlayerCommand state command =
 let playTurn state getRandomNumber command =
   let world = state.World
   match command with 
-  | Restart -> { World = makeWorld world.MaxX world.MaxY getRandomNumber; SimState = Simulating }
+  | Restart -> { World = makeWorld world.MaxX world.MaxY getRandomNumber; SimState = Simulating; TurnsLeft = 30 }
   | _ -> 
     match state.SimState with
     | Simulating -> 

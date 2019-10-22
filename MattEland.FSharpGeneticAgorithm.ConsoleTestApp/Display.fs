@@ -10,7 +10,9 @@ let printCell char isLastCell =
   else
     printf "%c" char
 
-let displayWorld (world: World) =
+let displayWorld (world: World) turnsRemaining =
+  printfn ""
+  printfn "%i turn(s) remaining" turnsRemaining
   printfn ""
 
   for y in 1..world.MaxX do
@@ -36,7 +38,7 @@ let displayWorld (world: World) =
   Console.ForegroundColor <- ConsoleColor.White
 
 let getUserInput(state: GameState): ConsoleKeyInfo =
-  displayWorld state.World
+  displayWorld state.World state.TurnsLeft
   printfn ""
   
   match state.SimState with
