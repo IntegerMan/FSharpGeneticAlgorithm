@@ -1,0 +1,16 @@
+﻿<Window x:Class="MattEland.FSharpGeneticAlgorithm.WindowsClient.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MattEland.FSharpGeneticAlgorithm.WindowsClient"
+        mc:Ignorable="d"
+        Title="WPF Core C# talking to F# Tutorial by Matt Eland" 
+        Width="450" Height="325"
+        Background="Black"
+        Foreground="White"
+        d:DataContext="{d:DesignInstance local:MainViewModel}">
+    <Grid Margin="10">
+        <TextBlock FontFamily="Courier New" Text="{Binding TextGrid}" FontSize="18"></TextBlock>
+    </Grid>
+</Window>

@@ -7,7 +7,9 @@ Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "MattEland.FSharpGeneticAlgo
 EndProject
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "MattEland.FSharpGeneticAgorithm.ConsoleTestApp", "MattEland.FSharpGeneticAgorithm.ConsoleTestApp\MattEland.FSharpGeneticAgorithm.ConsoleTestApp.fsproj", "{B6D8C81B-288E-4B7D-BED2-B88888077390}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "MattEland.FSharpGeneticAlgorithm.Tests", "MattEland.FSharpGeneticAlgorithm.Tests\MattEland.FSharpGeneticAlgorithm.Tests.fsproj", "{4FBB57BA-F439-480D-81C7-3770D377EC28}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "MattEland.FSharpGeneticAlgorithm.Tests", "MattEland.FSharpGeneticAlgorithm.Tests\MattEland.FSharpGeneticAlgorithm.Tests.fsproj", "{4FBB57BA-F439-480D-81C7-3770D377EC28}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MattEland.FSharpGeneticAlgorithm.WindowsClient", "MattEland.FSharpGeneticAlgorithm.WindowsClient\MattEland.FSharpGeneticAlgorithm.WindowsClient.csproj", "{A9D0C5F9-3197-48AB-977B-6B323664252B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{4FBB57BA-F439-480D-81C7-3770D377EC28}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4FBB57BA-F439-480D-81C7-3770D377EC28}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4FBB57BA-F439-480D-81C7-3770D377EC28}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A9D0C5F9-3197-48AB-977B-6B323664252B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A9D0C5F9-3197-48AB-977B-6B323664252B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A9D0C5F9-3197-48AB-977B-6B323664252B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A9D0C5F9-3197-48AB-977B-6B323664252B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
