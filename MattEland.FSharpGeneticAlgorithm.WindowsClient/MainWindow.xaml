@@ -6,11 +6,37 @@
         xmlns:local="clr-namespace:MattEland.FSharpGeneticAlgorithm.WindowsClient"
         mc:Ignorable="d"
         Title="WPF Core C# talking to F# Tutorial by Matt Eland" 
-        Width="450" Height="325"
+        Width="450" Height="355"
         Background="Black"
         Foreground="White"
         d:DataContext="{d:DesignInstance local:MainViewModel}">
-    <Grid Margin="10">
-        <TextBlock FontFamily="Courier New" Text="{Binding TextGrid}" FontSize="18"></TextBlock>
-    </Grid>
+    <DockPanel>
+        <!-- Status Bar -->
+        <StatusBar DockPanel.Dock="Bottom">
+            <StatusBarItem>
+                <TextBlock Text="{Binding TurnsLeftText}"></TextBlock>
+            </StatusBarItem>
+            <StatusBarItem>
+                <TextBlock Text="{Binding GameStatusText}"></TextBlock>
+            </StatusBarItem>
+        </StatusBar>
+        <!-- Commands Area -->
+        <StackPanel DockPanel.Dock="Right" Width="150">
+            <!--
+            <Button Style="{StaticResource CommandButtonStyle}">Move Up / Left</Button>
+            <Button Style="{StaticResource CommandButtonStyle}">Move Up</Button>
+            <Button Style="{StaticResource CommandButtonStyle}">Move Up / Right</Button>
+            <Button Style="{StaticResource CommandButtonStyle}">Move Left</Button>
+            <Button Style="{StaticResource CommandButtonStyle}">Move Right</Button>
+            <Button Style="{StaticResource CommandButtonStyle}">Move Down / Left</Button>
+            <Button Style="{StaticResource CommandButtonStyle}">Move Down</Button>
+            <Button Style="{StaticResource CommandButtonStyle}">Move Down / Right</Button>
+            -->
+            <Button Style="{StaticResource CommandButtonStyle}" Command="{Binding ResetCommand}">Restart</Button>
+        </StackPanel>
+        <!-- Main UI -->
+        <Grid Margin="10">
+            <TextBlock FontFamily="Courier New" Text="{Binding TextGrid}" FontSize="18"></TextBlock>
+        </Grid>
+    </DockPanel>
 </Window>
