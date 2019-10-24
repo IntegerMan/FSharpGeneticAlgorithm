@@ -21,7 +21,7 @@ let ``Point Adjaency Tests`` (x1, y1, x2, y2, expectedAdjacent) =
     isAdjacentTo pos1 pos2 |> should equal expectedAdjacent
 
 let getRandomNumber (max: int): int = 42
-let buildTestState = {World=(makeTestWorld false); SimState=Simulating; TurnsLeft = 30}
+let buildTestState = {World=(makeTestWorld false); SimState=SimulationState.Simulating; TurnsLeft = 30}
 
 [<Fact>]
 let ``Rabbit should move randomly`` () =
@@ -60,7 +60,7 @@ let ``Squirrel Getting Acorn to Tree Should Win Game`` () =
 
   // Assert
   newState.World.Squirrel.Pos |> should equal state.World.Tree.Pos
-  newState.SimState |> should equal Won
+  newState.SimState |> should equal SimulationState.Won
   
 [<Fact>]
 let ``Dog Should Eat Squirrel If Adjacent`` () =
@@ -75,7 +75,7 @@ let ``Dog Should Eat Squirrel If Adjacent`` () =
   // Assert
   newState.World.Doggo.Pos |> should equal newState.World.Squirrel.Pos
   newState.World.Squirrel.IsActive |> should equal false
-  newState.SimState |> should equal Lost
+  newState.SimState |> should equal SimulationState.Lost
   
 [<Fact>]
 let ``Simulating actors should decrease the turns left counter`` () =   
@@ -97,4 +97,4 @@ let ``Running out of turns should lose the simulation`` () =
   let newState = simulateActors state getRandomNumber
   
   // Assert
-  newState.SimState |> should equal Lost
+  newState.SimState |> should equal SimulationState.Lost

@@ -6,7 +6,7 @@ open MattEland.FSharpGeneticAlgorithm.Logic.Actors
 open MattEland.FSharpGeneticAlgorithm.Logic.Commands
 open MattEland.FSharpGeneticAlgorithm.Logic.WorldGeneration
 
-type SimulationState = Simulating | Won | Lost
+type SimulationState = Simulating=0 | Won=1 | Lost=2
 
 type GameState = { World : World; SimState: SimulationState; TurnsLeft: int}
 
@@ -36,7 +36,7 @@ let moveActor state actor pos =
         Doggo = {world.Doggo with Pos = pos}
       }}
     else
-      {state with SimState = Lost; World = {world with
+      {state with SimState = SimulationState.Lost; World = {world with
         Squirrel = {world.Squirrel with IsActive = false}
         Doggo = {world.Doggo with Pos = pos}
         }
@@ -55,7 +55,7 @@ let moveActor state actor pos =
     else if hasAcorn && otherActor.ActorKind = Tree then
       // Moving to the tree with the acorn - this should win the game
       {
-        state with SimState = Won; World = { 
+        state with SimState = SimulationState.Won; World = { 
           world with Squirrel = {ActorKind = Squirrel true; Pos = pos; IsActive = true} 
         }
       }
@@ -108,11 +108,11 @@ let simulateDoggo (state: GameState) =
     state
 
 let decreaseTimer (state: GameState) =
-  if state.SimState = Simulating then
+  if state.SimState = SimulationState.Simulating then
     if state.TurnsLeft > 0 then
       {state with TurnsLeft = state.TurnsLeft - 1}
     else
-      {state with TurnsLeft = 0; SimState = Lost}
+      {state with TurnsLeft = 0; SimState = SimulationState.Lost}
   else
     state
 
@@ -144,10 +144,19 @@ let handlePlayerCommand state command =
 let playTurn state getRandomNumber command =
   let world = state.World
   match command with 
-  | Restart -> { World = makeWorld world.MaxX world.MaxY getRandomNumber; SimState = Simulating; TurnsLeft = 30 }
+  | Restart -> { World = makeWorld world.MaxX world.MaxY getRandomNumber; SimState = SimulationState.Simulating; TurnsLeft = 30 }
   | _ -> 
     match state.SimState with
-    | Simulating -> 
+    | SimulationState.Simulating -> 
       let newState = handlePlayerCommand state command 
       simulateActors newState getRandomNumber
     | _ -> state
+
+let simulateTurn state command =
+  if state.SimState = SimulationState.Simulating then
+    let random = new System.Random()
+    let newState = handlePlayerCommand state command
+    simulateActors(newState) random.Next
+  else
+    state
+  

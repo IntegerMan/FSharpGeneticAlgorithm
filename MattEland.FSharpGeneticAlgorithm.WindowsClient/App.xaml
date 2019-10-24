@@ -4,8 +4,5 @@
              xmlns:local="clr-namespace:MattEland.FSharpGeneticAlgorithm.WindowsClient"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         <Style TargetType="Button" x:Key="CommandButtonStyle">
-            <Setter Property="Margin" Value="5"></Setter>
-         </Style>
     </Application.Resources>
 </Application>

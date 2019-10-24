@@ -10,6 +10,16 @@
         Background="Black"
         Foreground="White"
         d:DataContext="{d:DesignInstance local:MainViewModel}">
+    <Window.Resources>
+        <Style TargetType="Button" x:Key="CommandButtonStyle">
+            <Setter Property="Margin" Value="5"></Setter>
+        </Style>
+        <Style TargetType="Button" x:Key="MoveButtonStyle" BasedOn="{StaticResource CommandButtonStyle}">
+            <Setter Property="Width" Value="50"></Setter>
+            <Setter Property="Height" Value="50"></Setter>
+            <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
+        </Style>
+    </Window.Resources>
     <DockPanel>
         <!-- Status Bar -->
         <StatusBar DockPanel.Dock="Bottom">
@@ -22,16 +32,17 @@
         </StatusBar>
         <!-- Commands Area -->
         <StackPanel DockPanel.Dock="Right" Width="150">
-            <!--
-            <Button Style="{StaticResource CommandButtonStyle}">Move Up / Left</Button>
-            <Button Style="{StaticResource CommandButtonStyle}">Move Up</Button>
-            <Button Style="{StaticResource CommandButtonStyle}">Move Up / Right</Button>
-            <Button Style="{StaticResource CommandButtonStyle}">Move Left</Button>
-            <Button Style="{StaticResource CommandButtonStyle}">Move Right</Button>
-            <Button Style="{StaticResource CommandButtonStyle}">Move Down / Left</Button>
-            <Button Style="{StaticResource CommandButtonStyle}">Move Down</Button>
-            <Button Style="{StaticResource CommandButtonStyle}">Move Down / Right</Button>
-            -->
+            <UniformGrid Rows="3" Columns="3">
+                <Button Style="{StaticResource MoveButtonStyle}" Command="{Binding MoveCommand}" CommandParameter="NW">NW</Button>
+                <Button Style="{StaticResource MoveButtonStyle}" Command="{Binding MoveCommand}" CommandParameter="N">N</Button>
+                <Button Style="{StaticResource MoveButtonStyle}" Command="{Binding MoveCommand}" CommandParameter="NE">NE</Button>
+                <Button Style="{StaticResource MoveButtonStyle}" Command="{Binding MoveCommand}" CommandParameter="W">W</Button>
+                <Button Style="{StaticResource MoveButtonStyle}" Command="{Binding MoveCommand}" CommandParameter="Wait">Wait</Button>
+                <Button Style="{StaticResource MoveButtonStyle}" Command="{Binding MoveCommand}" CommandParameter="E">E</Button>
+                <Button Style="{StaticResource MoveButtonStyle}" Command="{Binding MoveCommand}" CommandParameter="SW">SW</Button>
+                <Button Style="{StaticResource MoveButtonStyle}" Command="{Binding MoveCommand}" CommandParameter="S">S</Button>
+                <Button Style="{StaticResource MoveButtonStyle}" Command="{Binding MoveCommand}" CommandParameter="SE">SE</Button>
+            </UniformGrid>
             <Button Style="{StaticResource CommandButtonStyle}" Command="{Binding ResetCommand}">Restart</Button>
         </StackPanel>
         <!-- Main UI -->
