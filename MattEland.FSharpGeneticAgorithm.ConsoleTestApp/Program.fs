@@ -33,7 +33,7 @@ let main argv =
 
   let world = makeTestWorld false
 
-  let mutable state = { World = world; SimState = Simulating; TurnsLeft=30}
+  let mutable state = { World = world; SimState = SimulationState.Simulating; TurnsLeft=30}
   let mutable simulating: bool = true
 
   while simulating do

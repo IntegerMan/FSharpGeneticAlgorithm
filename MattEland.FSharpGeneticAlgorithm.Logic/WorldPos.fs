@@ -11,6 +11,6 @@ let isAdjacentTo (posA: WorldPos) (posB: WorldPos): bool =
   result
 
 let getRandomPos(maxX:int32, maxY:int32, getRandom): WorldPos =
-  let x = getRandom maxX
-  let y = getRandom maxY
+  let x = 1 + getRandom maxX 
+  let y = 1 + getRandom maxY
   newPos x y

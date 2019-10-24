@@ -48,6 +48,10 @@ let makeWorld maxX maxY random =
     Acorn = actors.[3]
     Rabbit = actors.[4] }
 
+let makeDefaultWorld() =
+  let random = new System.Random()
+  makeWorld 13 13 random.Next
+
 let makeTestWorld hasAcorn = 
   {
     MaxX = 13; 

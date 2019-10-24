@@ -1,0 +1,34 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <ApplicationIcon>KillAllDefectsSymbol.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Acorn.png" />
+    <None Remove="Doggo.png" />
+    <None Remove="Grass.png" />
+    <None Remove="Rabbit.png" />
+    <None Remove="Squirrel.png" />
+    <None Remove="SquirrelAcorn.png" />
+    <None Remove="Tree.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MattEland.FSharpGeneticAlgorithm.Logic\MattEland.FSharpGeneticAlgorithm.Logic.fsproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Acorn.png" />
+    <Resource Include="Doggo.png" />
+    <Resource Include="Grass.png" />
+    <Resource Include="Rabbit.png" />
+    <Resource Include="Squirrel.png" />
+    <Resource Include="SquirrelAcorn.png" />
+    <Resource Include="Tree.png" />
+  </ItemGroup>
+
+</Project>
