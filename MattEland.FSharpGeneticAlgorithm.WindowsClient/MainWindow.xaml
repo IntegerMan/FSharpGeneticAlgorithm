@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:MattEland.FSharpGeneticAlgorithm.WindowsClient"
         mc:Ignorable="d"
         Title="WPF Core C# talking to F# Tutorial by Matt Eland" 
-        Width="450" Height="355"
+        Width="755" Height="650"
         Background="Black"
         Foreground="White"
         d:DataContext="{d:DesignInstance local:MainViewModel}">
@@ -22,11 +22,11 @@
     </Window.Resources>
     <DockPanel>
         <!-- Status Bar -->
-        <StatusBar DockPanel.Dock="Bottom">
+        <StatusBar DockPanel.Dock="Bottom" Background="{Binding GameStatusBrush}" FontWeight="Bold">
             <StatusBarItem>
                 <TextBlock Text="{Binding TurnsLeftText}"></TextBlock>
             </StatusBarItem>
-            <StatusBarItem>
+            <StatusBarItem HorizontalAlignment="Right">
                 <TextBlock Text="{Binding GameStatusText}"></TextBlock>
             </StatusBarItem>
         </StatusBar>
@@ -46,8 +46,71 @@
             <Button Style="{StaticResource CommandButtonStyle}" Command="{Binding ResetCommand}">Restart</Button>
         </StackPanel>
         <!-- Main UI -->
-        <Grid Margin="10">
-            <TextBlock FontFamily="Courier New" Text="{Binding TextGrid}" FontSize="18"></TextBlock>
+        <Grid Margin="10" Background="Green">
+            <Image Source="Grass.png" Stretch="Fill" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"></Image>
+            <Viewbox Stretch="Uniform">
+                <Border BorderThickness="1" BorderBrush="DarkGreen">
+                <ItemsControl ItemsSource="{Binding Path=Actors}" Width="130" Height="130">
+                    <ItemsControl.ItemTemplate>
+                        <ItemContainerTemplate>
+                            <Border d:DataContext="{d:DesignInstance local:ActorViewModel}"
+                                    BorderBrush="Black"
+                                    BorderThickness="1"
+                                    ToolTip="{Binding ImagePath}">
+                                <Image Source="{Binding ImagePath}" 
+                                       HorizontalAlignment="Stretch"
+                                       VerticalAlignment="Stretch" 
+                                       Stretch="Fill">
+                                </Image>
+                            </Border>
+                        </ItemContainerTemplate>
+                    </ItemsControl.ItemTemplate>
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition></ColumnDefinition>
+                                    <ColumnDefinition></ColumnDefinition>
+                                    <ColumnDefinition></ColumnDefinition>
+                                    <ColumnDefinition></ColumnDefinition>
+                                    <ColumnDefinition></ColumnDefinition>
+                                    <ColumnDefinition></ColumnDefinition>
+                                    <ColumnDefinition></ColumnDefinition>
+                                    <ColumnDefinition></ColumnDefinition>
+                                    <ColumnDefinition></ColumnDefinition>
+                                    <ColumnDefinition></ColumnDefinition>
+                                    <ColumnDefinition></ColumnDefinition>
+                                    <ColumnDefinition></ColumnDefinition>
+                                    <ColumnDefinition></ColumnDefinition>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition></RowDefinition>
+                                    <RowDefinition></RowDefinition>
+                                    <RowDefinition></RowDefinition>
+                                    <RowDefinition></RowDefinition>
+                                    <RowDefinition></RowDefinition>
+                                    <RowDefinition></RowDefinition>
+                                    <RowDefinition></RowDefinition>
+                                    <RowDefinition></RowDefinition>
+                                    <RowDefinition></RowDefinition>
+                                    <RowDefinition></RowDefinition>
+                                    <RowDefinition></RowDefinition>
+                                    <RowDefinition></RowDefinition>
+                                    <RowDefinition></RowDefinition>
+                                </Grid.RowDefinitions>
+                            </Grid>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemContainerStyle>
+                        <Style TargetType="ContentPresenter">
+                            <Setter Property="Grid.Column" Value="{Binding PosX}" />
+                            <Setter Property="Grid.Row" Value="{Binding PosY}" />
+                        </Style>
+                    </ItemsControl.ItemContainerStyle>
+                </ItemsControl>
+                </Border>
+            </Viewbox>
+            <!--<TextBlock FontFamily="Courier New" Text="{Binding TextGrid}" FontSize="18"></TextBlock>-->
         </Grid>
     </DockPanel>
 </Window>

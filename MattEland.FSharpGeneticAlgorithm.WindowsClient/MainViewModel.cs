@@ -1,4 +1,7 @@
-﻿using System.Text;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Windows.Media;
 using MattEland.FSharpGeneticAlgorithm.Logic;
 
 namespace MattEland.FSharpGeneticAlgorithm.WindowsClient
@@ -6,6 +9,7 @@ namespace MattEland.FSharpGeneticAlgorithm.WindowsClient
     internal class MainViewModel : NotifyPropertyChangedBase
     {
         private Simulator.GameState _state;
+        private readonly ObservableCollection<ActorViewModel> _actors = new ObservableCollection<ActorViewModel>();
 
         public MainViewModel()
         {
@@ -16,6 +20,8 @@ namespace MattEland.FSharpGeneticAlgorithm.WindowsClient
         }
 
         public ActionCommand MoveCommand { get; }
+
+        public IEnumerable<ActorViewModel> Actors => _actors;
 
         private void Move(object direction)
         {
@@ -55,14 +61,19 @@ namespace MattEland.FSharpGeneticAlgorithm.WindowsClient
             set
             {
                 _state = value;
-                OnPropertyChanged(nameof(TextGrid));
+
+                _actors.Clear();
+                foreach (var actor in _state.World.Actors.Where(a => a.IsActive))
+                {
+                    _actors.Add(new ActorViewModel(actor));
+                }
+
+                OnPropertyChanged(nameof(GameStatusBrush));
                 OnPropertyChanged(nameof(GameStatusText));
                 OnPropertyChanged(nameof(TurnsLeftText));
             }
         }
-
-        public string TextGrid => BuildAsciiGrid();
-
+        
         public string GameStatusText => _state.SimState switch
             {
                 Simulator.SimulationState.Won => "Won",
@@ -70,28 +81,15 @@ namespace MattEland.FSharpGeneticAlgorithm.WindowsClient
                 _ => "Simulating"
             };
 
+        public Brush GameStatusBrush => _state.SimState switch
+            {
+                Simulator.SimulationState.Won => Brushes.MediumSeaGreen,
+                Simulator.SimulationState.Lost => Brushes.LightCoral,
+                _ => Brushes.LightGray
+            };
+
         public string TurnsLeftText => _state.TurnsLeft == 1 
                 ? "1 Turn Left" 
                 : $"{_state.TurnsLeft} Turns Left";
-
-
-        private string BuildAsciiGrid()
-        {
-            var world = _state.World;
-            var sb = new StringBuilder();
-
-            for (int y = 1; y <= world.MaxY; y++)
-            {
-                for (int x = 1; x <= world.MaxX; x++)
-                {
-                    sb.Append(World.getCharacterAtCell(x, y, world));
-                }
-
-                // Advance to the next line
-                sb.AppendLine();
-            }
-
-            return sb.ToString();
-        }
     }
 }
