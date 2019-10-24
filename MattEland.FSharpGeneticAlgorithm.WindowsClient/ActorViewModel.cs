@@ -2,7 +2,7 @@
 
 namespace MattEland.FSharpGeneticAlgorithm.WindowsClient
 {
-    internal class ActorViewModel : NotifyPropertyChangedBase
+    internal class ActorViewModel
     {
         private readonly Actors.Actor _actor;
 
@@ -12,8 +12,8 @@ namespace MattEland.FSharpGeneticAlgorithm.WindowsClient
         }
 
         // Subtract 1 since my data's indexes start at 1 instead of 0
-        public int PosX => _actor.Pos.X - 1;
-        public int PosY => _actor.Pos.Y - 1;
+        public int PosX => (_actor.Pos.X - 1) * 10;
+        public int PosY => (_actor.Pos.Y - 1) * 10;
 
         public string Text => Actors.getChar(_actor).ToString();
 

@@ -9,7 +9,6 @@ namespace MattEland.FSharpGeneticAlgorithm.WindowsClient
     internal class MainViewModel : NotifyPropertyChangedBase
     {
         private Simulator.GameState _state;
-        private readonly ObservableCollection<ActorViewModel> _actors = new ObservableCollection<ActorViewModel>();
 
         public MainViewModel()
         {
@@ -54,6 +53,8 @@ namespace MattEland.FSharpGeneticAlgorithm.WindowsClient
             World.World world = WorldGeneration.makeDefaultWorld();
             State = new Simulator.GameState(world, Simulator.SimulationState.Simulating, 30);
         }
+
+        private readonly ObservableCollection<ActorViewModel> _actors = new ObservableCollection<ActorViewModel>();
 
         public Simulator.GameState State
         {

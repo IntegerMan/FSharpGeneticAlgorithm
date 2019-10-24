@@ -3,13 +3,10 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:MattEland.FSharpGeneticAlgorithm.WindowsClient"
         mc:Ignorable="d"
         Title="WPF Core C# talking to F# Tutorial by Matt Eland" 
         Width="755" Height="650"
-        Background="Black"
-        Foreground="White"
-        d:DataContext="{d:DesignInstance local:MainViewModel}">
+        Background="Black" Foreground="White">
     <Window.Resources>
         <Style TargetType="Button" x:Key="CommandButtonStyle">
             <Setter Property="Margin" Value="5"></Setter>
@@ -50,67 +47,28 @@
             <Image Source="Grass.png" Stretch="Fill" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"></Image>
             <Viewbox Stretch="Uniform">
                 <Border BorderThickness="1" BorderBrush="DarkGreen">
-                <ItemsControl ItemsSource="{Binding Path=Actors}" Width="130" Height="130">
-                    <ItemsControl.ItemTemplate>
-                        <ItemContainerTemplate>
-                            <Border d:DataContext="{d:DesignInstance local:ActorViewModel}"
-                                    BorderBrush="Black"
-                                    BorderThickness="1"
-                                    ToolTip="{Binding ImagePath}">
-                                <Image Source="{Binding ImagePath}" 
-                                       HorizontalAlignment="Stretch"
-                                       VerticalAlignment="Stretch" 
-                                       Stretch="Fill">
-                                </Image>
-                            </Border>
-                        </ItemContainerTemplate>
-                    </ItemsControl.ItemTemplate>
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition></ColumnDefinition>
-                                    <ColumnDefinition></ColumnDefinition>
-                                    <ColumnDefinition></ColumnDefinition>
-                                    <ColumnDefinition></ColumnDefinition>
-                                    <ColumnDefinition></ColumnDefinition>
-                                    <ColumnDefinition></ColumnDefinition>
-                                    <ColumnDefinition></ColumnDefinition>
-                                    <ColumnDefinition></ColumnDefinition>
-                                    <ColumnDefinition></ColumnDefinition>
-                                    <ColumnDefinition></ColumnDefinition>
-                                    <ColumnDefinition></ColumnDefinition>
-                                    <ColumnDefinition></ColumnDefinition>
-                                    <ColumnDefinition></ColumnDefinition>
-                                </Grid.ColumnDefinitions>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition></RowDefinition>
-                                    <RowDefinition></RowDefinition>
-                                    <RowDefinition></RowDefinition>
-                                    <RowDefinition></RowDefinition>
-                                    <RowDefinition></RowDefinition>
-                                    <RowDefinition></RowDefinition>
-                                    <RowDefinition></RowDefinition>
-                                    <RowDefinition></RowDefinition>
-                                    <RowDefinition></RowDefinition>
-                                    <RowDefinition></RowDefinition>
-                                    <RowDefinition></RowDefinition>
-                                    <RowDefinition></RowDefinition>
-                                    <RowDefinition></RowDefinition>
-                                </Grid.RowDefinitions>
-                            </Grid>
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                    <ItemsControl.ItemContainerStyle>
-                        <Style TargetType="ContentPresenter">
-                            <Setter Property="Grid.Column" Value="{Binding PosX}" />
-                            <Setter Property="Grid.Row" Value="{Binding PosY}" />
-                        </Style>
-                    </ItemsControl.ItemContainerStyle>
-                </ItemsControl>
+                    <ItemsControl ItemsSource="{Binding Actors}" Width="130" Height="130">
+                        <ItemsControl.ItemTemplate>
+                            <ItemContainerTemplate>
+                                <Border BorderBrush="Black" BorderThickness="1">
+                                    <Image Source="{Binding ImagePath}" Width="10" Height="10" Stretch="Fill"></Image>
+                                </Border>
+                            </ItemContainerTemplate>
+                        </ItemsControl.ItemTemplate>
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <Canvas></Canvas>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemContainerStyle>
+                            <Style TargetType="ContentPresenter">
+                                <Setter Property="Canvas.Left" Value="{Binding PosX}" />
+                                <Setter Property="Canvas.Top" Value="{Binding PosY}" />
+                            </Style>
+                        </ItemsControl.ItemContainerStyle>
+                    </ItemsControl>
                 </Border>
             </Viewbox>
-            <!--<TextBlock FontFamily="Courier New" Text="{Binding TextGrid}" FontSize="18"></TextBlock>-->
         </Grid>
     </DockPanel>
 </Window>
