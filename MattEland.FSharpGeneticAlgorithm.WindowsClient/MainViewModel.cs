@@ -5,7 +5,6 @@ using System.Linq;
 using System.Windows.Media;
 using MattEland.FSharpGeneticAlgorithm.Logic;
 using MattEland.FSharpGeneticAlgorithm.Genetics;
-using Microsoft.FSharp.Core;
 
 namespace MattEland.FSharpGeneticAlgorithm.WindowsClient
 {
@@ -16,15 +15,22 @@ namespace MattEland.FSharpGeneticAlgorithm.WindowsClient
 
         public MainViewModel()
         {
+            RandomizeCommand = new ActionCommand(RandomizeBrain);
             BrainCommand = new ActionCommand(GetArtificialIntelligenceMove);
             ResetCommand = new ActionCommand(Reset);
             MoveCommand = new ActionCommand(Move);
 
-            _brain = new MattEland.FSharpGeneticAlgorithm.Genetics.Genes.SquirrelPriorities(0,0,0,0,0,0);
+            RandomizeBrain();
 
             Reset();
         }
 
+        private void RandomizeBrain()
+        {
+            _brain = Genes.getRandomPriorities(_random);
+        }
+
+        public ActionCommand RandomizeCommand { get; }
         public ActionCommand MoveCommand { get; }
 
         public IEnumerable<ActorViewModel> Actors => _actors;
@@ -74,7 +80,7 @@ namespace MattEland.FSharpGeneticAlgorithm.WindowsClient
         }
 
         private readonly ObservableCollection<ActorViewModel> _actors = new ObservableCollection<ActorViewModel>();
-        private readonly Genes.SquirrelPriorities _brain;
+        private Genes.SquirrelPriorities _brain;
 
         public Simulator.GameState State
         {

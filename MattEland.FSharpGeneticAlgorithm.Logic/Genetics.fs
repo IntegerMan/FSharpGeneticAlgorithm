@@ -28,3 +28,15 @@
       selfImportance: double
       randomImportance: double
     }
+
+  let getRandomGene (random: System.Random): double = (random.NextDouble() * 2.0) - 1.0
+
+  let getRandomPriorities (random: System.Random) = 
+    {
+      dogImportance = getRandomGene random;
+      acornImportance = getRandomGene random;
+      rabbitImportance = getRandomGene random;
+      treeImportance = getRandomGene random;
+      selfImportance = getRandomGene random;
+      randomImportance = getRandomGene random;
+    }

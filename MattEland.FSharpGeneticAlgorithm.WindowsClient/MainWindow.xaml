@@ -41,6 +41,7 @@
                 <Button Style="{StaticResource MoveButtonStyle}" Command="{Binding MoveCommand}" CommandParameter="SE">SE</Button>
             </UniformGrid>
             <Button Style="{StaticResource CommandButtonStyle}" Command="{Binding BrainCommand}">AI Move</Button>
+            <Button Style="{StaticResource CommandButtonStyle}" Command="{Binding RandomizeCommand}">Randomize Brain</Button>
             <Button Style="{StaticResource CommandButtonStyle}" Command="{Binding ResetCommand}">Restart</Button>
         </StackPanel>
         <!-- Main UI -->
