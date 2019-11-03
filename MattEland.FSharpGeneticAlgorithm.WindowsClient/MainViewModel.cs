@@ -37,8 +37,7 @@ namespace MattEland.FSharpGeneticAlgorithm.WindowsClient
 
         private void GetArtificialIntelligenceMove()
         {
-            var command = Simulator.getCommandFromBrain(_brain, _state, _random);
-            HandlePlayerCommand(command);
+            State = Simulator.handleBrainMove(_brain, _state, _random);
         }
 
         private void Move(object direction)

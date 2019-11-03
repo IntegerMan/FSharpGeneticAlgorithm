@@ -2,6 +2,9 @@
 
   open GeneticSharp.Domain.Chromosomes
   open GeneticSharp.Domain.Fitnesses
+  open MattEland.FSharpGeneticAlgorithm.Logic.WorldPos
+  open MattEland.FSharpGeneticAlgorithm.Logic.Actors
+  open MattEland.FSharpGeneticAlgorithm.Logic.World
 
   type SquirrelChromosome() = 
     inherit ChromosomeBase(5) // Number of genes in the chromosome
@@ -40,3 +43,17 @@
       selfImportance = getRandomGene random;
       randomImportance = getRandomGene random;
     }
+
+  let evaluateProximity(actor: Actor, pos:WorldPos, weight: float): float =
+    if actor.IsActive then
+      getDistance(actor.Pos, pos) * weight
+    else
+      0.0
+
+  let evaluateTile(brain: SquirrelPriorities, world: World, pos: WorldPos, random: System.Random): float =
+    evaluateProximity(world.Squirrel, pos, brain.selfImportance) + 
+    evaluateProximity(world.Rabbit, pos, brain.rabbitImportance) + 
+    evaluateProximity(world.Doggo, pos, brain.dogImportance) + 
+    evaluateProximity(world.Acorn, pos, brain.acornImportance) + 
+    evaluateProximity(world.Tree, pos, brain.treeImportance) + 
+    (random.NextDouble() * brain.randomImportance)

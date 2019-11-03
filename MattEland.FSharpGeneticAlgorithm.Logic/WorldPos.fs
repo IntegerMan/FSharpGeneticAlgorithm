@@ -14,3 +14,10 @@ let getRandomPos(maxX:int32, maxY:int32, getRandom): WorldPos =
   let x = 1 + getRandom maxX 
   let y = 1 + getRandom maxY
   newPos x y
+
+let getDistance(a: WorldPos, b: WorldPos): float =
+  let x1 = float(a.X)
+  let x2 = float(b.X)
+  let y1 = float(a.Y)
+  let y2 = float(b.Y)
+  System.Math.Sqrt((x1-x2)*(x1-x2) + (y1-y2)*(y1-y2))

@@ -161,21 +161,19 @@ let simulateTurn state command =
   else
     state
 
-let getCommandFromBrain brain state (random: System.Random) =
-  match (random.Next(9)) + 1 with
-  | 1 -> GameCommand.MoveDownLeft
-  | 2 -> GameCommand.MoveDown
-  | 3 -> GameCommand.MoveDownRight
-  | 4 -> GameCommand.MoveLeft
-  | 6 -> GameCommand.MoveRight
-  | 7 -> GameCommand.MoveUpLeft
-  | 8 -> GameCommand.MoveUp
-  | 9 -> GameCommand.MoveUpRight
-  | _ -> GameCommand.Wait
+let handleBrainMove brain state (random: System.Random) =
+  if state.SimState = SimulationState.Simulating then
+    let current = state.World.Squirrel.Pos
+    let movedPos = getCandidates(current, state.World, true) 
+                   |> Seq.sortBy(fun pos -> evaluateTile(brain, state.World, pos, random))
+                   |> Seq.head
+    let newState = moveActor state state.World.Squirrel movedPos
+    simulateActors(newState) random.Next
+  else
+    state
 
 let simulateAiTurn state (random: System.Random) brain =
-  let command = getCommandFromBrain brain state random
-  let newState = handlePlayerCommand state command
+  let newState = handleBrainMove brain state random
   simulateActors(newState) random.Next  
   
 type BrainSimulationResult =
