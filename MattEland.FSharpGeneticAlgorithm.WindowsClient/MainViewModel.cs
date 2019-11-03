@@ -1,19 +1,26 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Media;
 using MattEland.FSharpGeneticAlgorithm.Logic;
+using MattEland.FSharpGeneticAlgorithm.Genetics;
+using Microsoft.FSharp.Core;
 
 namespace MattEland.FSharpGeneticAlgorithm.WindowsClient
 {
     internal class MainViewModel : NotifyPropertyChangedBase
     {
+        private readonly Random _random = new Random();
         private Simulator.GameState _state;
 
         public MainViewModel()
         {
+            BrainCommand = new ActionCommand(GetArtificialIntelligenceMove);
             ResetCommand = new ActionCommand(Reset);
             MoveCommand = new ActionCommand(Move);
+
+            _brain = new MattEland.FSharpGeneticAlgorithm.Genetics.Genes.SquirrelPriorities(0,0,0,0,0,0);
 
             Reset();
         }
@@ -21,6 +28,12 @@ namespace MattEland.FSharpGeneticAlgorithm.WindowsClient
         public ActionCommand MoveCommand { get; }
 
         public IEnumerable<ActorViewModel> Actors => _actors;
+
+        private void GetArtificialIntelligenceMove()
+        {
+            var command = Simulator.getCommandFromBrain(_brain, _state, _random);
+            HandlePlayerCommand(command);
+        }
 
         private void Move(object direction)
         {
@@ -42,11 +55,17 @@ namespace MattEland.FSharpGeneticAlgorithm.WindowsClient
                 _ => Commands.GameCommand.Wait
             };
 
+            HandlePlayerCommand(command);
+        }
+
+        private void HandlePlayerCommand(Commands.GameCommand command)
+        {
             // Process the action and update our new state
             State = Simulator.simulateTurn(_state, command);
         }
 
         public ActionCommand ResetCommand { get; }
+        public ActionCommand BrainCommand { get; }
 
         private void Reset()
         {
@@ -55,6 +74,7 @@ namespace MattEland.FSharpGeneticAlgorithm.WindowsClient
         }
 
         private readonly ObservableCollection<ActorViewModel> _actors = new ObservableCollection<ActorViewModel>();
+        private readonly Genes.SquirrelPriorities _brain;
 
         public Simulator.GameState State
         {

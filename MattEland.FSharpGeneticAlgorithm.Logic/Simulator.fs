@@ -5,6 +5,7 @@ open MattEland.FSharpGeneticAlgorithm.Logic.World
 open MattEland.FSharpGeneticAlgorithm.Logic.Actors
 open MattEland.FSharpGeneticAlgorithm.Logic.Commands
 open MattEland.FSharpGeneticAlgorithm.Logic.WorldGeneration
+open MattEland.FSharpGeneticAlgorithm.Genetics.Genes
 
 type SimulationState = Simulating=0 | Won=1 | Lost=2
 
@@ -141,7 +142,7 @@ let handlePlayerCommand state command =
   else
     state
     
-let playTurn state getRandomNumber command =
+let playTurn state (getRandomNumber: int -> int) command =
   let world = state.World
   match command with 
   | Restart -> { World = makeWorld world.MaxX world.MaxY getRandomNumber; SimState = SimulationState.Simulating; TurnsLeft = 30 }
@@ -154,9 +155,52 @@ let playTurn state getRandomNumber command =
 
 let simulateTurn state command =
   if state.SimState = SimulationState.Simulating then
-    let random = new System.Random()
+    let random = System.Random()
     let newState = handlePlayerCommand state command
     simulateActors(newState) random.Next
   else
     state
+
+let getCommandFromBrain brain state (random: System.Random) =
+  match (random.Next(9)) + 1 with
+  | 1 -> GameCommand.MoveDownLeft
+  | 2 -> GameCommand.MoveDown
+  | 3 -> GameCommand.MoveDownRight
+  | 4 -> GameCommand.MoveLeft
+  | 6 -> GameCommand.MoveRight
+  | 7 -> GameCommand.MoveUpLeft
+  | 8 -> GameCommand.MoveUp
+  | 9 -> GameCommand.MoveUpRight
+  | _ -> GameCommand.Wait
+
+let simulateAiTurn state (random: System.Random) brain =
+  let command = getCommandFromBrain brain state random
+  let newState = handlePlayerCommand state command
+  simulateActors(newState) random.Next  
   
+type BrainSimulationResult =
+  {
+    brain: SquirrelPriorities
+    fitness: double
+    states: GameState[]
+  }
+
+let buildStartingState(random: System.Random): GameState = 
+  let world = makeWorld 13 13 random.Next
+  { 
+    World = world; 
+    SimState = SimulationState.Simulating;
+    TurnsLeft = 30
+  }  
+
+let simulateBrain brain: BrainSimulationResult =
+  let random = System.Random()
+
+  let initialState: GameState = buildStartingState random
+  let states: GameState[] = [|initialState|]
+
+  {
+    fitness = 0.0;
+    brain = brain;
+    states = states
+  }

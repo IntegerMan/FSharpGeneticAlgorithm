@@ -9,7 +9,7 @@ Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "MattEland.FSharpGeneticAgor
 EndProject
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "MattEland.FSharpGeneticAlgorithm.Tests", "MattEland.FSharpGeneticAlgorithm.Tests\MattEland.FSharpGeneticAlgorithm.Tests.fsproj", "{4FBB57BA-F439-480D-81C7-3770D377EC28}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MattEland.FSharpGeneticAlgorithm.WindowsClient", "MattEland.FSharpGeneticAlgorithm.WindowsClient\MattEland.FSharpGeneticAlgorithm.WindowsClient.csproj", "{A9D0C5F9-3197-48AB-977B-6B323664252B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MattEland.FSharpGeneticAlgorithm.WindowsClient", "MattEland.FSharpGeneticAlgorithm.WindowsClient\MattEland.FSharpGeneticAlgorithm.WindowsClient.csproj", "{A9D0C5F9-3197-48AB-977B-6B323664252B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
