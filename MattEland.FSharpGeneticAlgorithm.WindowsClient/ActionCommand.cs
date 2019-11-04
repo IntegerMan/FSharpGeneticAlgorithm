@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Input;
+using JetBrains.Annotations;
 
 namespace MattEland.FSharpGeneticAlgorithm.WindowsClient
 {
@@ -7,11 +8,13 @@ namespace MattEland.FSharpGeneticAlgorithm.WindowsClient
     {
         private readonly Action<object> _invokedAction;
 
+        [PublicAPI]
         public ActionCommand(Action invokedAction)
         {
             _invokedAction = _ => invokedAction?.Invoke();
         }
 
+        [PublicAPI]
         public ActionCommand(Action<object> invokedAction)
         {
             _invokedAction = invokedAction;

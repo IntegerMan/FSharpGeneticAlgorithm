@@ -20,4 +20,4 @@ let getDistance(a: WorldPos, b: WorldPos): float =
   let x2 = float(b.X)
   let y1 = float(a.Y)
   let y2 = float(b.Y)
-  System.Math.Sqrt((x1-x2)*(x1-x2) + (y1-y2)*(y1-y2))
+  System.Math.Sqrt((x1-x2)*(x1-x2) + (y1-y2)*(y1-y2)) // Calculate distance via C^2 = A^2 + B^2 

@@ -18,6 +18,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="JetBrains.Annotations" Version="2019.1.3" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\MattEland.FSharpGeneticAlgorithm.Logic\MattEland.FSharpGeneticAlgorithm.Logic.fsproj" />
   </ItemGroup>
 

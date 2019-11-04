@@ -18,7 +18,6 @@ namespace MattEland.FSharpGeneticAlgorithm.WindowsClient
             RandomizeCommand = new ActionCommand(RandomizeBrain);
             BrainCommand = new ActionCommand(GetArtificialIntelligenceMove);
             ResetCommand = new ActionCommand(Reset);
-            MoveCommand = new ActionCommand(Move);
 
             RandomizeBrain();
 
@@ -31,42 +30,12 @@ namespace MattEland.FSharpGeneticAlgorithm.WindowsClient
         }
 
         public ActionCommand RandomizeCommand { get; }
-        public ActionCommand MoveCommand { get; }
 
         public IEnumerable<ActorViewModel> Actors => _actors;
 
         private void GetArtificialIntelligenceMove()
         {
             State = Simulator.handleBrainMove(_brain, _state, _random);
-        }
-
-        private void Move(object direction)
-        {
-            // Parameter validation / cleansing
-            direction ??= "";
-            direction = direction.ToString().ToLowerInvariant();
-
-            // Translate from the command parameter to the GameCommand in F#
-            Commands.GameCommand command = direction switch
-            {
-                "nw" => Commands.GameCommand.MoveUpLeft,
-                "n" => Commands.GameCommand.MoveUp,
-                "ne" => Commands.GameCommand.MoveUpRight,
-                "w" => Commands.GameCommand.MoveLeft,
-                "e" => Commands.GameCommand.MoveRight,
-                "sw" => Commands.GameCommand.MoveDownLeft,
-                "s" => Commands.GameCommand.MoveDown,
-                "se" => Commands.GameCommand.MoveDownRight,
-                _ => Commands.GameCommand.Wait
-            };
-
-            HandlePlayerCommand(command);
-        }
-
-        private void HandlePlayerCommand(Commands.GameCommand command)
-        {
-            // Process the action and update our new state
-            State = Simulator.simulateTurn(_state, command);
         }
 
         public ActionCommand ResetCommand { get; }
