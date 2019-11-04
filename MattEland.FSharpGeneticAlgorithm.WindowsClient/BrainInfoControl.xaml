@@ -1,0 +1,25 @@
+﻿<UserControl x:Class="MattEland.FSharpGeneticAlgorithm.WindowsClient.BrainInfoControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:viewModels="clr-namespace:MattEland.FSharpGeneticAlgorithm.WindowsClient.ViewModels"
+             mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance viewModels:BrainInfoViewModel}">
+    <StackPanel>
+        <TextBlock Margin="0,10,0,10" FontWeight="Bold">Brain Info:</TextBlock>
+
+        <TextBlock Margin="0,10,0,0">Acorn</TextBlock>
+        <ProgressBar Minimum="-1" Maximum="1" Value="{Binding AcornPriority, Mode=OneWay}"></ProgressBar>
+        <TextBlock Margin="0,10,0,0">Dog</TextBlock>
+        <ProgressBar Minimum="-1" Maximum="1" Value="{Binding DoggoPriority, Mode=OneWay}"></ProgressBar>
+        <TextBlock Margin="0,10,0,0">Rabbit</TextBlock>
+        <ProgressBar Minimum="-1" Maximum="1" Value="{Binding RabbitPriority, Mode=OneWay}"></ProgressBar>
+        <TextBlock Margin="0,10,0,0">Squirrel</TextBlock>
+        <ProgressBar Minimum="-1" Maximum="1" Value="{Binding SquirrelPriority, Mode=OneWay}"></ProgressBar>
+        <TextBlock Margin="0,10,0,0">Tree</TextBlock>
+        <ProgressBar Minimum="-1" Maximum="1" Value="{Binding TreePriority, Mode=OneWay}"></ProgressBar>
+        <TextBlock Margin="0,10,0,0">Random</TextBlock>
+        <ProgressBar Minimum="-1" Maximum="1" Value="{Binding RandomPriority, Mode=OneWay}"></ProgressBar>
+    </StackPanel>
+</UserControl>

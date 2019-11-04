@@ -1,6 +1,6 @@
 ﻿using MattEland.FSharpGeneticAlgorithm.Logic;
 
-namespace MattEland.FSharpGeneticAlgorithm.WindowsClient
+namespace MattEland.FSharpGeneticAlgorithm.WindowsClient.ViewModels
 {
     internal class ActorViewModel
     {
@@ -23,35 +23,25 @@ namespace MattEland.FSharpGeneticAlgorithm.WindowsClient
             {
                 if (_actor.ActorKind.Equals(Actors.ActorKind.Acorn))
                 {
-                    return "Acorn.png";
+                    return "Images\\Acorn.png";
                 }
 
                 if (_actor.ActorKind.Equals(Actors.ActorKind.Doggo))
                 {
-                    return "Doggo.png";
+                    return "Images\\Doggo.png";
                 }
 
                 if (_actor.ActorKind.Equals(Actors.ActorKind.Rabbit))
                 {
-                    return "Rabbit.png";
+                    return "Images\\Rabbit.png";
                 }
 
                 if (_actor.ActorKind.Equals(Actors.ActorKind.Tree))
                 {
-                    return "Tree.png";
+                    return "Images\\Tree.png";
                 }
 
-                if (_actor.ActorKind.Equals(Actors.ActorKind.NewSquirrel(true)))
-                {
-                    return "SquirrelAcorn.png";
-                }
-
-                if (_actor.ActorKind.Equals(Actors.ActorKind.NewSquirrel(false)))
-                {
-                    return "Squirrel.png";
-                }
-
-                return null;
+                return "Images\\SquirrelAcorn.png";
             }
         }
     }

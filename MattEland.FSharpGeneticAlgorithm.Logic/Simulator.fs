@@ -3,8 +3,7 @@
 open MattEland.FSharpGeneticAlgorithm.Logic.WorldPos
 open MattEland.FSharpGeneticAlgorithm.Logic.World
 open MattEland.FSharpGeneticAlgorithm.Logic.Actors
-open MattEland.FSharpGeneticAlgorithm.Logic.Commands
-open MattEland.FSharpGeneticAlgorithm.Logic.WorldGeneration
+open MattEland.FSharpGeneticAlgorithm.Genetics.Genes
 
 type SimulationState = Simulating=0 | Won=1 | Lost=2
 
@@ -116,47 +115,18 @@ let decreaseTimer (state: GameState) =
   else
     state
 
-let simulateActors (state: GameState) getRandomNumber =
+let simulateActors (state: GameState, getRandomNumber) =
   moveRandomly state state.World.Rabbit getRandomNumber 
   |> simulateDoggo
   |> decreaseTimer
 
-let handlePlayerCommand state command =
-  let player = state.World.Squirrel
-  let xDelta =
-    match command with
-    | MoveLeft | MoveDownLeft | MoveUpLeft -> -1
-    | MoveRight | MoveDownRight | MoveUpRight -> 1
-    | _ -> 0
-  let yDelta =
-    match command with
-    | MoveUpLeft | MoveUp | MoveUpRight -> -1
-    | MoveDownLeft | MoveDown | MoveDownRight -> 1
-    | _ -> 0
-
-  let movedPos = {X=player.Pos.X + xDelta; Y=player.Pos.Y + yDelta}
-
-  if isValidPos movedPos state.World then
-    moveActor state player movedPos
-  else
-    state
-    
-let playTurn state getRandomNumber command =
-  let world = state.World
-  match command with 
-  | Restart -> { World = makeWorld world.MaxX world.MaxY getRandomNumber; SimState = SimulationState.Simulating; TurnsLeft = 30 }
-  | _ -> 
-    match state.SimState with
-    | SimulationState.Simulating -> 
-      let newState = handlePlayerCommand state command 
-      simulateActors newState getRandomNumber
-    | _ -> state
-
-let simulateTurn state command =
+let handleChromosomeMove (state: GameState, random: System.Random, chromosome: ActorChromosome) =
   if state.SimState = SimulationState.Simulating then
-    let random = new System.Random()
-    let newState = handlePlayerCommand state command
-    simulateActors(newState) random.Next
+    let current = state.World.Squirrel.Pos
+    let movedPos = getCandidates(current, state.World, true) 
+                   |> Seq.sortBy(fun pos -> evaluateTile(chromosome, state.World, pos, random))
+                   |> Seq.head
+    let newState = moveActor state state.World.Squirrel movedPos
+    simulateActors(newState, random.Next)
   else
     state
-  

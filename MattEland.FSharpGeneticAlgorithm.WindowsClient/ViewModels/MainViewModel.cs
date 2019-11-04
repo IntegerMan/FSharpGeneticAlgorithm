@@ -1,52 +1,53 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Media;
+using MattEland.FSharpGeneticAlgorithm.Genetics;
 using MattEland.FSharpGeneticAlgorithm.Logic;
 
-namespace MattEland.FSharpGeneticAlgorithm.WindowsClient
+namespace MattEland.FSharpGeneticAlgorithm.WindowsClient.ViewModels
 {
     internal class MainViewModel : NotifyPropertyChangedBase
     {
+        private readonly Random _random = new Random();
         private Simulator.GameState _state;
 
         public MainViewModel()
         {
+            RandomizeCommand = new ActionCommand(RandomizeBrain);
+            BrainCommand = new ActionCommand(GetArtificialIntelligenceMove);
             ResetCommand = new ActionCommand(Reset);
-            MoveCommand = new ActionCommand(Move);
+
+            RandomizeBrain();
 
             Reset();
         }
 
-        public ActionCommand MoveCommand { get; }
+        public BrainInfoViewModel Brain
+        {
+            get => _brain;
+            set {
+                if (_brain != value)
+                {
+                    _brain = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public ActionCommand RandomizeCommand { get; }
 
         public IEnumerable<ActorViewModel> Actors => _actors;
 
-        private void Move(object direction)
-        {
-            // Parameter validation / cleansing
-            direction ??= "";
-            direction = direction.ToString().ToLowerInvariant();
+        private void RandomizeBrain() =>
+            Brain = new BrainInfoViewModel(Genes.getRandomChromosome(_random));
 
-            // Translate from the command parameter to the GameCommand in F#
-            Commands.GameCommand command = direction switch
-            {
-                "nw" => Commands.GameCommand.MoveUpLeft,
-                "n" => Commands.GameCommand.MoveUp,
-                "ne" => Commands.GameCommand.MoveUpRight,
-                "w" => Commands.GameCommand.MoveLeft,
-                "e" => Commands.GameCommand.MoveRight,
-                "sw" => Commands.GameCommand.MoveDownLeft,
-                "s" => Commands.GameCommand.MoveDown,
-                "se" => Commands.GameCommand.MoveDownRight,
-                _ => Commands.GameCommand.Wait
-            };
-
-            // Process the action and update our new state
-            State = Simulator.simulateTurn(_state, command);
-        }
+        private void GetArtificialIntelligenceMove() => 
+            State = Simulator.handleChromosomeMove(_state, _random, Brain.Model);
 
         public ActionCommand ResetCommand { get; }
+        public ActionCommand BrainCommand { get; }
 
         private void Reset()
         {
@@ -55,6 +56,7 @@ namespace MattEland.FSharpGeneticAlgorithm.WindowsClient
         }
 
         private readonly ObservableCollection<ActorViewModel> _actors = new ObservableCollection<ActorViewModel>();
+        private BrainInfoViewModel _brain;
 
         public Simulator.GameState State
         {

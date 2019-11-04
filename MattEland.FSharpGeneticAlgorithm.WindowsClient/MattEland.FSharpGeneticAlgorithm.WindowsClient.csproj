@@ -18,17 +18,21 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="JetBrains.Annotations" Version="2019.1.3" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\MattEland.FSharpGeneticAlgorithm.Logic\MattEland.FSharpGeneticAlgorithm.Logic.fsproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Acorn.png" />
-    <Resource Include="Doggo.png" />
-    <Resource Include="Grass.png" />
-    <Resource Include="Rabbit.png" />
-    <Resource Include="Squirrel.png" />
-    <Resource Include="SquirrelAcorn.png" />
-    <Resource Include="Tree.png" />
+    <Resource Include="Images\Acorn.png" />
+    <Resource Include="Images\Doggo.png" />
+    <Resource Include="Images\Grass.png" />
+    <Resource Include="Images\Rabbit.png" />
+    <Resource Include="Images\Squirrel.png" />
+    <Resource Include="Images\SquirrelAcorn.png" />
+    <Resource Include="Images\Tree.png" />
   </ItemGroup>
 
 </Project>

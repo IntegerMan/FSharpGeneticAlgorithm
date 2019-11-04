@@ -7,7 +7,6 @@ open MattEland.FSharpGeneticAlgorithm.Logic.Actors
 open MattEland.FSharpGeneticAlgorithm.Logic.World
 open MattEland.FSharpGeneticAlgorithm.Logic.WorldGeneration
 open MattEland.FSharpGeneticAlgorithm.Logic.Simulator
-open MattEland.FSharpGeneticAlgorithm.Logic.Commands
 
 [<Theory>]
 [<InlineData(4, 2, 4, 1, true)>]
@@ -30,37 +29,10 @@ let ``Rabbit should move randomly`` () =
   let originalPos = state.World.Rabbit.Pos
 
   // Act
-  let newWorld = simulateActors state getRandomNumber
+  let newWorld = simulateActors(state, getRandomNumber)
 
   // Assert
   newWorld.World.Rabbit.Pos |> should not' (equal originalPos)
-  
-[<Fact>]
-let ``Squirrel Getting Acorn Should Change how it Displays`` () =
-  // Arrange
-  let customSquirrel = {Pos=newPos 6 7; ActorKind = Squirrel false; IsActive = true}
-  let testState = buildTestState
-  let state: GameState = {testState with World = {testState.World with Squirrel = customSquirrel}}
-  
-  // Act
-  let newState = handlePlayerCommand state MoveLeft
-
-  // Assert
-  newState.World.Squirrel.ActorKind |> should equal (Squirrel true)
-
-[<Fact>]
-let ``Squirrel Getting Acorn to Tree Should Win Game`` () =
-  // Arrange
-  let customSquirrel = {Pos=newPos 9 10; ActorKind = Squirrel true; IsActive = true}
-  let testState = buildTestState
-  let state: GameState = {testState with World = {testState.World with Squirrel = customSquirrel}}
-  
-  // Act
-  let newState = handlePlayerCommand state MoveLeft
-
-  // Assert
-  newState.World.Squirrel.Pos |> should equal state.World.Tree.Pos
-  newState.SimState |> should equal SimulationState.Won
   
 [<Fact>]
 let ``Dog Should Eat Squirrel If Adjacent`` () =
@@ -70,7 +42,7 @@ let ``Dog Should Eat Squirrel If Adjacent`` () =
   let state: GameState = {testState with World = {testState.World with Squirrel = customSquirrel}}
     
   // Act
-  let newState = simulateActors state getRandomNumber
+  let newState = simulateActors(state, getRandomNumber)
   
   // Assert
   newState.World.Doggo.Pos |> should equal newState.World.Squirrel.Pos
@@ -83,7 +55,7 @@ let ``Simulating actors should decrease the turns left counter`` () =
   let initialState = buildTestState
 
   // Act
-  let newState = simulateActors initialState getRandomNumber
+  let newState = simulateActors(initialState, getRandomNumber)
 
   // Assert
   newState.TurnsLeft |> should equal (initialState.TurnsLeft - 1)
@@ -94,7 +66,7 @@ let ``Running out of turns should lose the simulation`` () =
   let state: GameState = {buildTestState with TurnsLeft = 0}
     
   // Act
-  let newState = simulateActors state getRandomNumber
+  let newState = simulateActors(state, getRandomNumber)
   
   // Assert
   newState.SimState |> should equal SimulationState.Lost

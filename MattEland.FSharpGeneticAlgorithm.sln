@@ -5,11 +5,9 @@ VisualStudioVersion = 16.0.29324.140
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "MattEland.FSharpGeneticAlgorithm.Logic", "MattEland.FSharpGeneticAlgorithm.Logic\MattEland.FSharpGeneticAlgorithm.Logic.fsproj", "{022CF0FD-4C4A-470F-BA5B-48D1FAAE8A1E}"
 EndProject
-Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "MattEland.FSharpGeneticAgorithm.ConsoleTestApp", "MattEland.FSharpGeneticAgorithm.ConsoleTestApp\MattEland.FSharpGeneticAgorithm.ConsoleTestApp.fsproj", "{B6D8C81B-288E-4B7D-BED2-B88888077390}"
-EndProject
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "MattEland.FSharpGeneticAlgorithm.Tests", "MattEland.FSharpGeneticAlgorithm.Tests\MattEland.FSharpGeneticAlgorithm.Tests.fsproj", "{4FBB57BA-F439-480D-81C7-3770D377EC28}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MattEland.FSharpGeneticAlgorithm.WindowsClient", "MattEland.FSharpGeneticAlgorithm.WindowsClient\MattEland.FSharpGeneticAlgorithm.WindowsClient.csproj", "{A9D0C5F9-3197-48AB-977B-6B323664252B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MattEland.FSharpGeneticAlgorithm.WindowsClient", "MattEland.FSharpGeneticAlgorithm.WindowsClient\MattEland.FSharpGeneticAlgorithm.WindowsClient.csproj", "{A9D0C5F9-3197-48AB-977B-6B323664252B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,10 +19,6 @@ Global
 		{022CF0FD-4C4A-470F-BA5B-48D1FAAE8A1E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{022CF0FD-4C4A-470F-BA5B-48D1FAAE8A1E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{022CF0FD-4C4A-470F-BA5B-48D1FAAE8A1E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B6D8C81B-288E-4B7D-BED2-B88888077390}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B6D8C81B-288E-4B7D-BED2-B88888077390}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B6D8C81B-288E-4B7D-BED2-B88888077390}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B6D8C81B-288E-4B7D-BED2-B88888077390}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4FBB57BA-F439-480D-81C7-3770D377EC28}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4FBB57BA-F439-480D-81C7-3770D377EC28}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4FBB57BA-F439-480D-81C7-3770D377EC28}.Release|Any CPU.ActiveCfg = Release|Any CPU
