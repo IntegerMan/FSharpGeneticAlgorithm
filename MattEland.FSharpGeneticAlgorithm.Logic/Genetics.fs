@@ -4,25 +4,25 @@
   open MattEland.FSharpGeneticAlgorithm.Logic.Actors
   open MattEland.FSharpGeneticAlgorithm.Logic.World
 
-  type SquirrelPriorities =
+  type ActorChromosome =
     {
       dogImportance: double
       acornImportance: double
       rabbitImportance: double
       treeImportance: double
-      selfImportance: double
+      squirrelImportance: double
       randomImportance: double
     }
 
   let getRandomGene (random: System.Random): double = (random.NextDouble() * 2.0) - 1.0
 
-  let getRandomPriorities (random: System.Random) = 
+  let getRandomChromosome (random: System.Random) = 
     {
       dogImportance = getRandomGene random;
       acornImportance = getRandomGene random;
       rabbitImportance = getRandomGene random;
       treeImportance = getRandomGene random;
-      selfImportance = getRandomGene random;
+      squirrelImportance = getRandomGene random;
       randomImportance = getRandomGene random;
     }
 
@@ -32,8 +32,8 @@
     else
       0.0
 
-  let evaluateTile(brain: SquirrelPriorities, world: World, pos: WorldPos, random: System.Random): float =
-    evaluateProximity(world.Squirrel, pos, brain.selfImportance) + 
+  let evaluateTile(brain: ActorChromosome, world: World, pos: WorldPos, random: System.Random): float =
+    evaluateProximity(world.Squirrel, pos, brain.squirrelImportance) + 
     evaluateProximity(world.Rabbit, pos, brain.rabbitImportance) + 
     evaluateProximity(world.Doggo, pos, brain.dogImportance) + 
     evaluateProximity(world.Acorn, pos, brain.acornImportance) + 

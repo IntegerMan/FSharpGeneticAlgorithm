@@ -115,22 +115,18 @@ let decreaseTimer (state: GameState) =
   else
     state
 
-let simulateActors (state: GameState) getRandomNumber =
+let simulateActors (state: GameState, getRandomNumber) =
   moveRandomly state state.World.Rabbit getRandomNumber 
   |> simulateDoggo
   |> decreaseTimer
 
-let handleBrainMove brain state (random: System.Random) =
+let handleChromosomeMove (state: GameState, random: System.Random, chromosome: ActorChromosome) =
   if state.SimState = SimulationState.Simulating then
     let current = state.World.Squirrel.Pos
     let movedPos = getCandidates(current, state.World, true) 
-                   |> Seq.sortBy(fun pos -> evaluateTile(brain, state.World, pos, random))
+                   |> Seq.sortBy(fun pos -> evaluateTile(chromosome, state.World, pos, random))
                    |> Seq.head
     let newState = moveActor state state.World.Squirrel movedPos
-    simulateActors(newState) random.Next
+    simulateActors(newState, random.Next)
   else
     state
-
-let simulateAiTurn state (random: System.Random) brain =
-  let newState = handleBrainMove brain state random
-  simulateActors(newState) random.Next  

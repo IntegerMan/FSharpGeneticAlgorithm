@@ -6,19 +6,17 @@ namespace MattEland.FSharpGeneticAlgorithm.WindowsClient.ViewModels
 {
     public class BrainInfoViewModel
     {
-        private readonly Genes.SquirrelPriorities _brain;
-
-        public BrainInfoViewModel([NotNull] Genes.SquirrelPriorities brain)
+        public BrainInfoViewModel([NotNull] Genes.ActorChromosome brain)
         {
-            _brain = brain ?? throw new ArgumentNullException(nameof(brain));
+            Model = brain ?? throw new ArgumentNullException(nameof(brain));
         }
 
-        public double SquirrelPriority => _brain.selfImportance;
-        public double DoggoPriority => _brain.dogImportance;
-        public double RabbitPriority => _brain.rabbitImportance;
-        public double AcornPriority => _brain.acornImportance;
-        public double TreePriority => _brain.treeImportance;
-        public double RandomPriority => _brain.randomImportance;
-        public Genes.SquirrelPriorities Model => _brain;
+        public double SquirrelPriority => Model.squirrelImportance;
+        public double DoggoPriority => Model.dogImportance;
+        public double RabbitPriority => Model.rabbitImportance;
+        public double AcornPriority => Model.acornImportance;
+        public double TreePriority => Model.treeImportance;
+        public double RandomPriority => Model.randomImportance;
+        public Genes.ActorChromosome Model { get; }
     }
 }

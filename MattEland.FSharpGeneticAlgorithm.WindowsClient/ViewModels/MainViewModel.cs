@@ -41,10 +41,10 @@ namespace MattEland.FSharpGeneticAlgorithm.WindowsClient.ViewModels
         public IEnumerable<ActorViewModel> Actors => _actors;
 
         private void RandomizeBrain() =>
-            Brain = new BrainInfoViewModel(Genes.getRandomPriorities(_random));
+            Brain = new BrainInfoViewModel(Genes.getRandomChromosome(_random));
 
         private void GetArtificialIntelligenceMove() => 
-            State = Simulator.handleBrainMove(Brain.Model, _state, _random);
+            State = Simulator.handleChromosomeMove(_state, _random, Brain.Model);
 
         public ActionCommand ResetCommand { get; }
         public ActionCommand BrainCommand { get; }

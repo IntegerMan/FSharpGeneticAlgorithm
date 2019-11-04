@@ -30,7 +30,6 @@
                 <Button Style="{StaticResource CommandButtonStyle}" Command="{Binding RandomizeCommand}">Randomize Brain</Button>
                 <Button Style="{StaticResource CommandButtonStyle}" Command="{Binding ResetCommand}">Restart</Button>
 
-                <TextBlock Margin="0,10,0,10" FontWeight="Bold">Brain Info:</TextBlock>
                 <windowsClient:BrainInfoControl DataContext="{Binding Brain}"></windowsClient:BrainInfoControl>
             </StackPanel>
         </Border>

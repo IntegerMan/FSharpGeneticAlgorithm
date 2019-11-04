@@ -1,5 +1,4 @@
-﻿using System.Windows;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using MattEland.FSharpGeneticAlgorithm.WindowsClient.ViewModels;
 
 namespace MattEland.FSharpGeneticAlgorithm.WindowsClient
