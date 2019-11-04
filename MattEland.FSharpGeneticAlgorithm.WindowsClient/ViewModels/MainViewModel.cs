@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Media;
-using MattEland.FSharpGeneticAlgorithm.Logic;
 using MattEland.FSharpGeneticAlgorithm.Genetics;
+using MattEland.FSharpGeneticAlgorithm.Logic;
 
-namespace MattEland.FSharpGeneticAlgorithm.WindowsClient
+namespace MattEland.FSharpGeneticAlgorithm.WindowsClient.ViewModels
 {
     internal class MainViewModel : NotifyPropertyChangedBase
     {
@@ -24,19 +24,27 @@ namespace MattEland.FSharpGeneticAlgorithm.WindowsClient
             Reset();
         }
 
-        private void RandomizeBrain()
+        public BrainInfoViewModel Brain
         {
-            _brain = Genes.getRandomPriorities(_random);
+            get => _brain;
+            set {
+                if (_brain != value)
+                {
+                    _brain = value;
+                    OnPropertyChanged();
+                }
+            }
         }
 
         public ActionCommand RandomizeCommand { get; }
 
         public IEnumerable<ActorViewModel> Actors => _actors;
 
-        private void GetArtificialIntelligenceMove()
-        {
-            State = Simulator.handleBrainMove(_brain, _state, _random);
-        }
+        private void RandomizeBrain() =>
+            Brain = new BrainInfoViewModel(Genes.getRandomPriorities(_random));
+
+        private void GetArtificialIntelligenceMove() => 
+            State = Simulator.handleBrainMove(Brain.Model, _state, _random);
 
         public ActionCommand ResetCommand { get; }
         public ActionCommand BrainCommand { get; }
@@ -48,7 +56,7 @@ namespace MattEland.FSharpGeneticAlgorithm.WindowsClient
         }
 
         private readonly ObservableCollection<ActorViewModel> _actors = new ObservableCollection<ActorViewModel>();
-        private Genes.SquirrelPriorities _brain;
+        private BrainInfoViewModel _brain;
 
         public Simulator.GameState State
         {

@@ -3,7 +3,6 @@
 open MattEland.FSharpGeneticAlgorithm.Logic.WorldPos
 open MattEland.FSharpGeneticAlgorithm.Logic.World
 open MattEland.FSharpGeneticAlgorithm.Logic.Actors
-open MattEland.FSharpGeneticAlgorithm.Logic.WorldGeneration
 open MattEland.FSharpGeneticAlgorithm.Genetics.Genes
 
 type SimulationState = Simulating=0 | Won=1 | Lost=2
@@ -135,30 +134,3 @@ let handleBrainMove brain state (random: System.Random) =
 let simulateAiTurn state (random: System.Random) brain =
   let newState = handleBrainMove brain state random
   simulateActors(newState) random.Next  
-  
-type BrainSimulationResult =
-  {
-    brain: SquirrelPriorities
-    fitness: double
-    states: GameState[]
-  }
-
-let buildStartingState(random: System.Random): GameState = 
-  let world = makeWorld 13 13 random.Next
-  { 
-    World = world; 
-    SimState = SimulationState.Simulating;
-    TurnsLeft = 30
-  }  
-
-let simulateBrain brain: BrainSimulationResult =
-  let random = System.Random()
-
-  let initialState: GameState = buildStartingState random
-  let states: GameState[] = [|initialState|]
-
-  {
-    fitness = 0.0;
-    brain = brain;
-    states = states
-  }

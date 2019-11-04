@@ -2,7 +2,7 @@
 using System.Windows.Input;
 using JetBrains.Annotations;
 
-namespace MattEland.FSharpGeneticAlgorithm.WindowsClient
+namespace MattEland.FSharpGeneticAlgorithm.WindowsClient.ViewModels
 {
     public class ActionCommand : ICommand
     {

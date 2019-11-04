@@ -2,7 +2,7 @@
 using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
 
-namespace MattEland.FSharpGeneticAlgorithm.WindowsClient
+namespace MattEland.FSharpGeneticAlgorithm.WindowsClient.ViewModels
 {
     internal abstract class NotifyPropertyChangedBase : INotifyPropertyChanged
     {
