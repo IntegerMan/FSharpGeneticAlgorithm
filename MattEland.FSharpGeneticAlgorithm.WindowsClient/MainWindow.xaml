@@ -15,7 +15,7 @@
     </Window.Resources>
     <DockPanel>
         <!-- Status Bar -->
-        <StatusBar DockPanel.Dock="Bottom" DataContext="{Binding GameResult.SelectedState}" Background="{Binding GameStatusBrush}" FontWeight="Bold">
+        <StatusBar DockPanel.Dock="Bottom" DataContext="{Binding SelectedBrain.SelectedState}" Background="{Binding GameStatusBrush}" FontWeight="Bold">
             <StatusBarItem>
                 <TextBlock Text="{Binding TurnsLeftText}"></TextBlock>
             </StatusBarItem>
@@ -24,16 +24,19 @@
             </StatusBarItem>
         </StatusBar>
         <!-- Commands Area -->
-        <Border DockPanel.Dock="Right" Width="150">
-            <StackPanel Margin="0,8,12,0">
+        <DockPanel DockPanel.Dock="Right" Width="150">
+            <StackPanel Margin="0,8,12,0" DockPanel.Dock="Top">
                 <Button Style="{StaticResource CommandButtonStyle}" Command="{Binding BrainCommand}">Simulate</Button>
                 <Button Style="{StaticResource CommandButtonStyle}" Command="{Binding RandomizeCommand}">Randomize Brain</Button>
-                
-                <windowsClient:BrainInfoControl DataContext="{Binding Brain}"></windowsClient:BrainInfoControl>
             </StackPanel>
-        </Border>
+            <TextBlock DockPanel.Dock="Top">Population</TextBlock>
+            <windowsClient:BrainInfoControl DockPanel.Dock="Bottom" 
+                                            DataContext="{Binding SelectedBrain.Brain}"></windowsClient:BrainInfoControl>
+            <ListBox ItemsSource="{Binding Population}" SelectedItem="{Binding SelectedBrain}"></ListBox>
+
+        </DockPanel>
         <!-- Main UI -->
-        <DockPanel DataContext="{Binding GameResult}">
+        <DockPanel DataContext="{Binding SelectedBrain}">
 
             <!-- Time Control -->
             <DockPanel DockPanel.Dock="Bottom" Margin="10">
@@ -44,7 +47,7 @@
             <Grid Margin="10" Background="Green" DataContext="{Binding SelectedState}">
             <Image Source="Images/Grass.png" Stretch="Fill" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"></Image>
             <Viewbox Stretch="Uniform">
-                <Border BorderThickness="1" BorderBrush="DarkGreen">
+                <Border>
                     <ItemsControl ItemsSource="{Binding Actors}" Width="130" Height="130">
                         <ItemsControl.ItemTemplate>
                             <ItemContainerTemplate>

@@ -18,6 +18,7 @@ namespace MattEland.FSharpGeneticAlgorithm.WindowsClient.ViewModels
             {
                 _states.Add(new GameStateViewModel(state));
             }
+            Brain = new BrainInfoViewModel(result.brain);
         }
 
         public double Score => _result.score;
@@ -40,5 +41,6 @@ namespace MattEland.FSharpGeneticAlgorithm.WindowsClient.ViewModels
         }
 
         public int MaxStateIndex => _states.Count - 1;
+        public BrainInfoViewModel Brain { get; }
     }
 }

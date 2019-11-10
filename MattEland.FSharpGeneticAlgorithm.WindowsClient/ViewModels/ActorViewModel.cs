@@ -15,8 +15,6 @@ namespace MattEland.FSharpGeneticAlgorithm.WindowsClient.ViewModels
         public int PosX => (_actor.Pos.X - 1) * 10;
         public int PosY => (_actor.Pos.Y - 1) * 10;
 
-        public string Text => Actors.getChar(_actor).ToString();
-
         public string ImagePath
         {
             get

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.ObjectModel;
+using System.Linq;
 using MattEland.FSharpGeneticAlgorithm.Genetics;
 using MattEland.FSharpGeneticAlgorithm.Logic;
 
@@ -10,51 +12,47 @@ namespace MattEland.FSharpGeneticAlgorithm.WindowsClient.ViewModels
 
         public MainViewModel()
         {
-            RandomizeCommand = new ActionCommand(RandomizeBrain);
-            BrainCommand = new ActionCommand(SimulateBrain);
+            RandomizeCommand = new ActionCommand(RandomizeBrains);
+            BrainCommand = new ActionCommand(AdvanceToNextGeneration);
 
-            RandomizeBrain();
+            RandomizeBrains();
         }
 
-        public BrainInfoViewModel Brain
+        public SimulationResultViewModel SelectedBrain
         {
             get => _brain;
             set {
                 if (_brain != value)
                 {
                     _brain = value;
-                    OnPropertyChanged();
+                    OnPropertyChanged(string.Empty);
                 }
             }
         }
 
         public ActionCommand RandomizeCommand { get; }
 
-        private void RandomizeBrain()
-        {
-            Brain = new BrainInfoViewModel(Genes.getRandomChromosome(_random));
-            SimulateBrain();
-        }
+        public ObservableCollection<SimulationResultViewModel> Population { get; } =
+            new ObservableCollection<SimulationResultViewModel>();
 
-        private void SimulateBrain()
+        private void RandomizeBrains()
         {
-            GameResult = new SimulationResultViewModel(Simulator.simulate(_random, _brain.Model));
-        }
-
-        public SimulationResultViewModel GameResult
-        {
-            get => _gameResult;
-            set
+            Population.Clear();
+            for (int i = 0; i <= 10; i++)
             {
-                if (Equals(value, _gameResult)) return;
-                _gameResult = value;
-                OnPropertyChanged();
+                var brain = Genes.getRandomChromosome(_random);
+                Population.Add(new SimulationResultViewModel(Simulator.simulate(_random, brain)));
             }
+
+            SelectedBrain = Population.First();
+        }
+
+        private void AdvanceToNextGeneration()
+        {
         }
 
         public ActionCommand BrainCommand { get; }
 
-        private BrainInfoViewModel _brain;
-        private SimulationResultViewModel _gameResult;
+        private SimulationResultViewModel _brain;
     }
 }

@@ -14,7 +14,7 @@
       randomImportance: double
     }
 
-  let getRandomGene (random: System.Random): double = (random.NextDouble() * 2.0) - 1.0
+  let getRandomGene (random: System.Random) = (random.NextDouble() * 2.0) - 1.0
 
   let getRandomChromosome (random: System.Random) = 
     {
@@ -26,16 +26,16 @@
       randomImportance = getRandomGene random;
     }
 
-  let evaluateProximity(actor: Actor, pos:WorldPos, weight: float): float =
+  let evaluateProximity actor pos weight =
     if actor.IsActive then
       getDistance(actor.Pos, pos) * weight
     else
       0.0
 
-  let evaluateTile(brain: ActorChromosome, world: World, pos: WorldPos, random: System.Random): float =
-    evaluateProximity(world.Squirrel, pos, brain.squirrelImportance) + 
-    evaluateProximity(world.Rabbit, pos, brain.rabbitImportance) + 
-    evaluateProximity(world.Doggo, pos, brain.dogImportance) + 
-    evaluateProximity(world.Acorn, pos, brain.acornImportance) + 
-    evaluateProximity(world.Tree, pos, brain.treeImportance) + 
+  let evaluateTile brain world pos (random: System.Random) =
+    evaluateProximity world.Squirrel pos brain.squirrelImportance + 
+    evaluateProximity world.Rabbit pos brain.rabbitImportance + 
+    evaluateProximity world.Doggo pos brain.dogImportance + 
+    evaluateProximity world.Acorn pos brain.acornImportance + 
+    evaluateProximity world.Tree pos brain.treeImportance + 
     (random.NextDouble() * brain.randomImportance)

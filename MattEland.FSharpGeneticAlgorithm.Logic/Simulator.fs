@@ -31,16 +31,17 @@ let moveActor state actor pos =
 
   let handleDogMove state otherActor =
     if otherActor.ActorKind = Rabbit then
-      {state with World = {world with
+      {
+        state with World = {world with
         Rabbit = {world.Rabbit with IsActive = false}
         Doggo = {world.Doggo with Pos = pos}
       }}
     else
-      {state with SimState = SimulationState.Lost; World = {world with
+      {
+        state with SimState = SimulationState.Lost; World = {world with
         Squirrel = {world.Squirrel with IsActive = false}
         Doggo = {world.Doggo with Pos = pos}
-        }
-      }
+      }}
 
   let handleSquirrelMove otherActor hasAcorn =
     if not hasAcorn && otherActor.ActorKind = Acorn && otherActor.IsActive then
@@ -94,7 +95,7 @@ let moveRandomly state actor getRandomNumber =
 
   moveActor state actor movedPos
 
-let simulateDoggo (state: GameState) =
+let simulateDoggo state =
   let doggo = state.World.Doggo
   let rabbit = state.World.Rabbit
   let squirrel = state.World.Squirrel
@@ -121,24 +122,25 @@ let simulateActors (state: GameState, getRandomNumber) =
   |> simulateDoggo
   |> decreaseTimer
 
-let handleChromosomeMove (state: GameState, random: System.Random, chromosome: ActorChromosome) =
+let handleChromosomeMove random chromosome state =
   if state.SimState = SimulationState.Simulating then
     let current = state.World.Squirrel.Pos
     let movedPos = getCandidates(current, state.World, true) 
-                   |> Seq.sortBy(fun pos -> evaluateTile(chromosome, state.World, pos, random))
+                   |> Seq.sortBy(fun pos -> evaluateTile chromosome state.World pos random)
                    |> Seq.head
     let newState = moveActor state state.World.Squirrel movedPos
     simulateActors(newState, random.Next)
   else
     state
 
-let buildStartingState (random: System.Random): GameState = 
+let buildStartingState (random: System.Random) = 
   let world = makeWorld 13 13 random.Next
   { World = world; SimState = SimulationState.Simulating; TurnsLeft = 30}
 
 type SimulationResult = {
     score: float
     states: GameState[]
+    brain: ActorChromosome
   }
 
 let simulateGame random brain initialState =
@@ -146,11 +148,12 @@ let simulateGame random brain initialState =
   states.Add(initialState)
   let mutable currentState = initialState
   while currentState.SimState = SimulationState.Simulating do
-    currentState <- handleChromosomeMove(currentState, random, brain)
+    currentState <- handleChromosomeMove random brain currentState
     states.Add(currentState)
   {
     score = 0.0; // TODO: Actually score
-    states = states.ToArray()
+    states = states.ToArray();
+    brain = brain
   }
 
 let simulate random brain = buildStartingState random |> simulateGame random brain
