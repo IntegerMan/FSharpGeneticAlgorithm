@@ -2,7 +2,7 @@
 
 namespace MattEland.FSharpGeneticAlgorithm.WindowsClient.ViewModels
 {
-    internal class ActorViewModel
+    public class ActorViewModel
     {
         private readonly Actors.Actor _actor;
 

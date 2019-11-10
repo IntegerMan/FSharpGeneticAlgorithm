@@ -15,7 +15,7 @@
     </Window.Resources>
     <DockPanel>
         <!-- Status Bar -->
-        <StatusBar DockPanel.Dock="Bottom" Background="{Binding GameStatusBrush}" FontWeight="Bold">
+        <StatusBar DockPanel.Dock="Bottom" DataContext="{Binding State}" Background="{Binding GameStatusBrush}" FontWeight="Bold">
             <StatusBarItem>
                 <TextBlock Text="{Binding TurnsLeftText}"></TextBlock>
             </StatusBarItem>
@@ -33,7 +33,7 @@
             </StackPanel>
         </Border>
         <!-- Main UI -->
-        <Grid Margin="10" Background="Green">
+        <Grid Margin="10" Background="Green" DataContext="{Binding State}">
             <Image Source="Images/Grass.png" Stretch="Fill" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"></Image>
             <Viewbox Stretch="Uniform">
                 <Border BorderThickness="1" BorderBrush="DarkGreen">
