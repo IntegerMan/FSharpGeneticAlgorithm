@@ -6,17 +6,22 @@ namespace MattEland.FSharpGeneticAlgorithm.WindowsClient.ViewModels
 {
     public class SimulationResultViewModel : NotifyPropertyChangedBase
     {
+        private readonly Simulator.SimulationResult _result;
         private readonly ObservableCollection<GameStateViewModel> _states;
         private int _currentIndex;
 
-        public SimulationResultViewModel(IEnumerable<Simulator.GameState> states)
+        public SimulationResultViewModel(Simulator.SimulationResult result)
         {
+            _result = result;
             _states = new ObservableCollection<GameStateViewModel>();
-            foreach (var state in states)
+            foreach (var state in _result.states)
             {
                 _states.Add(new GameStateViewModel(state));
             }
         }
+
+        public double Score => _result.score;
+        public string ScoreText => $"Score: {Score:F1}";
 
         public IEnumerable<GameStateViewModel> States => _states; 
 

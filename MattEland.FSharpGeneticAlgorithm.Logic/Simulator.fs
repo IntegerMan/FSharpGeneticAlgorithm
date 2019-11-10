@@ -136,15 +136,21 @@ let buildStartingState (random: System.Random): GameState =
   let world = makeWorld 13 13 random.Next
   { World = world; SimState = SimulationState.Simulating; TurnsLeft = 30}
 
-let simulateGame (initialState: GameState, random: System.Random, brain: ActorChromosome): GameState[] =
+type SimulationResult = {
+    score: float
+    states: GameState[]
+  }
+
+let simulateGame random brain initialState =
   let states = ResizeArray<GameState>()
   states.Add(initialState)
   let mutable currentState = initialState
   while currentState.SimState = SimulationState.Simulating do
     currentState <- handleChromosomeMove(currentState, random, brain)
     states.Add(currentState)
-  states.ToArray()
+  {
+    score = 0.0; // TODO: Actually score
+    states = states.ToArray()
+  }
 
-let simulate (random: System.Random, brain: ActorChromosome): GameState[] =
-  let state = buildStartingState random
-  simulateGame(state, random, brain)
+let simulate random brain = buildStartingState random |> simulateGame random brain
