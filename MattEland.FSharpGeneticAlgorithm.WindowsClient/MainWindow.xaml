@@ -26,10 +26,9 @@
         <!-- Commands Area -->
         <Border DockPanel.Dock="Right" Width="150">
             <StackPanel Margin="0,8,12,0">
-                <Button Style="{StaticResource CommandButtonStyle}" Command="{Binding BrainCommand}">AI Move</Button>
+                <Button Style="{StaticResource CommandButtonStyle}" Command="{Binding BrainCommand}">Simulate</Button>
                 <Button Style="{StaticResource CommandButtonStyle}" Command="{Binding RandomizeCommand}">Randomize Brain</Button>
-                <Button Style="{StaticResource CommandButtonStyle}" Command="{Binding ResetCommand}">Restart</Button>
-
+                
                 <windowsClient:BrainInfoControl DataContext="{Binding Brain}"></windowsClient:BrainInfoControl>
             </StackPanel>
         </Border>

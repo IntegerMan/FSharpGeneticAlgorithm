@@ -3,6 +3,7 @@
 open MattEland.FSharpGeneticAlgorithm.Logic.WorldPos
 open MattEland.FSharpGeneticAlgorithm.Logic.World
 open MattEland.FSharpGeneticAlgorithm.Logic.Actors
+open MattEland.FSharpGeneticAlgorithm.Logic.WorldGeneration
 open MattEland.FSharpGeneticAlgorithm.Genetics.Genes
 
 type SimulationState = Simulating=0 | Won=1 | Lost=2
@@ -130,3 +131,20 @@ let handleChromosomeMove (state: GameState, random: System.Random, chromosome: A
     simulateActors(newState, random.Next)
   else
     state
+
+let buildStartingState (random: System.Random): GameState = 
+  let world = makeWorld 13 13 random.Next
+  { World = world; SimState = SimulationState.Simulating; TurnsLeft = 30}
+
+let simulateGame (initialState: GameState, random: System.Random, brain: ActorChromosome): GameState[] =
+  let states = ResizeArray<GameState>()
+  states.Add(initialState)
+  let mutable currentState = initialState
+  while currentState.SimState = SimulationState.Simulating do
+    currentState <- handleChromosomeMove(currentState, random, brain)
+    states.Add(currentState)
+  states.ToArray()
+
+let simulate (random: System.Random, brain: ActorChromosome): GameState[] =
+  let state = buildStartingState random
+  simulateGame(state, random, brain)

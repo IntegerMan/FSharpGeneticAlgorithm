@@ -11,17 +11,13 @@ namespace MattEland.FSharpGeneticAlgorithm.WindowsClient.ViewModels
     internal class MainViewModel : NotifyPropertyChangedBase
     {
         private readonly Random _random = new Random();
-        private Simulator.GameState _state;
 
         public MainViewModel()
         {
             RandomizeCommand = new ActionCommand(RandomizeBrain);
-            BrainCommand = new ActionCommand(GetArtificialIntelligenceMove);
-            ResetCommand = new ActionCommand(Reset);
+            BrainCommand = new ActionCommand(SimulateBrain);
 
             RandomizeBrain();
-
-            Reset();
         }
 
         public BrainInfoViewModel Brain
@@ -40,59 +36,63 @@ namespace MattEland.FSharpGeneticAlgorithm.WindowsClient.ViewModels
 
         public IEnumerable<ActorViewModel> Actors => _actors;
 
-        private void RandomizeBrain() =>
-            Brain = new BrainInfoViewModel(Genes.getRandomChromosome(_random));
-
-        private void GetArtificialIntelligenceMove() => 
-            State = Simulator.handleChromosomeMove(_state, _random, Brain.Model);
-
-        public ActionCommand ResetCommand { get; }
-        public ActionCommand BrainCommand { get; }
-
-        private void Reset()
+        private void RandomizeBrain()
         {
-            World.World world = WorldGeneration.makeDefaultWorld();
-            State = new Simulator.GameState(world, Simulator.SimulationState.Simulating, 30);
+            Brain = new BrainInfoViewModel(Genes.getRandomChromosome(_random));
+            SimulateBrain();
         }
 
-        private readonly ObservableCollection<ActorViewModel> _actors = new ObservableCollection<ActorViewModel>();
-        private BrainInfoViewModel _brain;
-
-        public Simulator.GameState State
+        private void SimulateBrain()
         {
-            get => _state;
+            GameResult = Simulator.simulate(_random, _brain.Model);
+        }
+
+        public Simulator.GameState[] GameResult
+        {
+            get => _gameResult;
             set
             {
-                _state = value;
+                if (_gameResult == value) return;
+
+                _gameResult = value;
+
+                State = value.Last();
 
                 _actors.Clear();
-                foreach (var actor in _state.World.Actors.Where(a => a.IsActive))
+                foreach (var actor in State.World.Actors.Where(a => a.IsActive))
                 {
                     _actors.Add(new ActorViewModel(actor));
                 }
 
-                OnPropertyChanged(nameof(GameStatusBrush));
-                OnPropertyChanged(nameof(GameStatusText));
-                OnPropertyChanged(nameof(TurnsLeftText));
+                // Notify all properties changed
+                OnPropertyChanged(string.Empty);
             }
         }
-        
-        public string GameStatusText => _state.SimState switch
+
+        public ActionCommand BrainCommand { get; }
+
+        private readonly ObservableCollection<ActorViewModel> _actors = new ObservableCollection<ActorViewModel>();
+        private BrainInfoViewModel _brain;
+        private Simulator.GameState[] _gameResult;
+
+        public Simulator.GameState State { get; private set; }
+
+        public string GameStatusText => State.SimState switch
             {
                 Simulator.SimulationState.Won => "Won",
                 Simulator.SimulationState.Lost => "Lost",
                 _ => "Simulating"
             };
 
-        public Brush GameStatusBrush => _state.SimState switch
+        public Brush GameStatusBrush => State.SimState switch
             {
                 Simulator.SimulationState.Won => Brushes.MediumSeaGreen,
                 Simulator.SimulationState.Lost => Brushes.LightCoral,
                 _ => Brushes.LightGray
             };
 
-        public string TurnsLeftText => _state.TurnsLeft == 1 
+        public string TurnsLeftText => State.TurnsLeft == 1 
                 ? "1 Turn Left" 
-                : $"{_state.TurnsLeft} Turns Left";
+                : $"{State.TurnsLeft} Turns Left";
     }
 }
