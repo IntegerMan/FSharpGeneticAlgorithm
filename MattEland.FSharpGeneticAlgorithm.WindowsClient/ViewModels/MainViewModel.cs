@@ -40,7 +40,7 @@ namespace MattEland.FSharpGeneticAlgorithm.WindowsClient.ViewModels
             Population.Clear();
             for (int i = 0; i <= 10; i++)
             {
-                var brain = Genes.getRandomChromosome(_random);
+                var brain = Genes.getRandomChromosome(_random, _nextId++);
                 Population.Add(new SimulationResultViewModel(Simulator.simulate(_random, brain)));
             }
 
@@ -54,5 +54,6 @@ namespace MattEland.FSharpGeneticAlgorithm.WindowsClient.ViewModels
         public ActionCommand BrainCommand { get; }
 
         private SimulationResultViewModel _brain;
+        private int _nextId = 1;
     }
 }

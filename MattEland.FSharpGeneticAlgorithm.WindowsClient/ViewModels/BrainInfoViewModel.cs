@@ -18,5 +18,6 @@ namespace MattEland.FSharpGeneticAlgorithm.WindowsClient.ViewModels
         public double TreePriority => Model.treeImportance;
         public double RandomPriority => Model.randomImportance;
         public Genes.ActorChromosome Model { get; }
+        public int Id => Model.id;
     }
 }

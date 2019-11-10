@@ -6,6 +6,7 @@
 
   type ActorChromosome =
     {
+      id: int32
       dogImportance: double
       acornImportance: double
       rabbitImportance: double
@@ -16,8 +17,9 @@
 
   let getRandomGene (random: System.Random) = (random.NextDouble() * 2.0) - 1.0
 
-  let getRandomChromosome (random: System.Random) = 
+  let getRandomChromosome (random: System.Random) id = 
     {
+      id = id;
       dogImportance = getRandomGene random;
       acornImportance = getRandomGene random;
       rabbitImportance = getRandomGene random;

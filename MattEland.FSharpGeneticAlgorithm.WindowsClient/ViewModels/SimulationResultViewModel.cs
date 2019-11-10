@@ -23,6 +23,9 @@ namespace MattEland.FSharpGeneticAlgorithm.WindowsClient.ViewModels
 
         public double Score => _result.score;
         public string ScoreText => $"Score: {Score:F1}";
+        public int Id => Brain.Id;
+
+        public string DisplayText => $"Brain {Id} - {ScoreText}";
 
         public IEnumerable<GameStateViewModel> States => _states; 
 
