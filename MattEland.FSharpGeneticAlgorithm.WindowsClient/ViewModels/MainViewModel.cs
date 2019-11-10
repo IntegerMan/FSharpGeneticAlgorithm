@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using MattEland.FSharpGeneticAlgorithm.Genetics;
 using MattEland.FSharpGeneticAlgorithm.Logic;
 
@@ -39,37 +38,23 @@ namespace MattEland.FSharpGeneticAlgorithm.WindowsClient.ViewModels
 
         private void SimulateBrain()
         {
-            GameResult = Simulator.simulate(_random, _brain.Model);
+            GameResult = new SimulationResultViewModel(Simulator.simulate(_random, _brain.Model));
         }
 
-        public Simulator.GameState[] GameResult
+        public SimulationResultViewModel GameResult
         {
             get => _gameResult;
             set
             {
-                if (_gameResult == value) return;
-
+                if (Equals(value, _gameResult)) return;
                 _gameResult = value;
-
-                State = new GameStateViewModel(value.Last());
+                OnPropertyChanged();
             }
         }
 
         public ActionCommand BrainCommand { get; }
 
         private BrainInfoViewModel _brain;
-        private Simulator.GameState[] _gameResult;
-        private GameStateViewModel _state;
-
-        public GameStateViewModel State
-        {
-            get => _state;
-            private set
-            {
-                if (Equals(value, _state)) return;
-                _state = value;
-                OnPropertyChanged();
-            }
-        }
+        private SimulationResultViewModel _gameResult;
     }
 }
