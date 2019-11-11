@@ -10,7 +10,7 @@ let simulateGeneration random actors =
 let buildInitialPopulation random =
   seq {
     for id in 1 .. 10 do
-      let brain = getRandomChromosome random id
+      let brain = getRandomChromosome random
       yield brain
   }
   
@@ -18,10 +18,26 @@ let simulateFirstGeneration random =
   buildInitialPopulation random 
   |> simulateGeneration random
   
-let mutateBrains random results =
-  42
+let mutateBrains (random: System.Random, brains: ActorChromosome[]): ActorChromosome[] =
+  if brains.Length <> 10 then failwith "Expecting exactly 10 entries"
+  let survivors = [| brains.[0]; brains.[1]; |]
+  let randos = [|
+    getRandomChromosome random;
+    getRandomChromosome random;
+    getRandomChromosome random;
+    getRandomChromosome random;
+  |]
+
+  let children = [| 
+    createChild(random, survivors.[0], survivors.[1], 0.05);
+    createChild(random, survivors.[0], survivors.[1], 0.1);
+    createChild(random, survivors.[0], survivors.[1], 0.25);
+    createChild(random, survivors.[0], survivors.[1], 0.5);
+  |]
+
+  Array.append children randos |> Array.append survivors
 
 let mutateAndSimulateGeneration (random: System.Random, results: SimulationResult[]) =
-  Seq.map (fun b -> b.brain) results // TODO: Acutally mutate
-  |> simulateGeneration random
+  let brains = Seq.map (fun b -> b.brain) results |> Seq.toArray
+  mutateBrains(random, brains) |> simulateGeneration random
  

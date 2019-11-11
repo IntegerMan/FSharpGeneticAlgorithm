@@ -6,26 +6,24 @@ namespace MattEland.FSharpGeneticAlgorithm.WindowsClient.ViewModels
 {
     public class SimulationResultViewModel : NotifyPropertyChangedBase
     {
-        private readonly Genes.SimulationResult _result;
         private readonly ObservableCollection<GameStateViewModel> _states;
         private int _currentIndex;
 
         public SimulationResultViewModel(Genes.SimulationResult result)
         {
-            _result = result;
+            Model = result;
             _states = new ObservableCollection<GameStateViewModel>();
-            foreach (var state in _result.states)
+            foreach (var state in Model.states)
             {
                 _states.Add(new GameStateViewModel(state));
             }
             Brain = new BrainInfoViewModel(result.brain);
         }
 
-        public double Score => _result.score;
+        public double Score => Model.score;
         public string ScoreText => $"Score: {Score:F1}";
-        public int Id => Brain.Id;
 
-        public string DisplayText => $"Brain {Id} - {ScoreText}";
+        public string DisplayText => $"Brain - {ScoreText}";
 
         public IEnumerable<GameStateViewModel> States => _states; 
 
@@ -45,6 +43,6 @@ namespace MattEland.FSharpGeneticAlgorithm.WindowsClient.ViewModels
 
         public int MaxStateIndex => _states.Count - 1;
         public BrainInfoViewModel Brain { get; }
-        public Genes.SimulationResult Model => _result;
+        public Genes.SimulationResult Model { get; }
     }
 }

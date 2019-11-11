@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using MattEland.FSharpGeneticAlgorithm.Genetics;
-using MattEland.FSharpGeneticAlgorithm.Logic;
 
 namespace MattEland.FSharpGeneticAlgorithm.WindowsClient.ViewModels
 {
@@ -65,6 +64,5 @@ namespace MattEland.FSharpGeneticAlgorithm.WindowsClient.ViewModels
         public ActionCommand BrainCommand { get; }
 
         private SimulationResultViewModel _brain;
-        private int _nextId = 1;
     }
 }
