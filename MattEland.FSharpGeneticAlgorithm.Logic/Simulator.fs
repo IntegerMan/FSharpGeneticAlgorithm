@@ -135,12 +135,6 @@ let buildStartingState (random: System.Random) =
   let world = makeWorld 13 13 random.Next
   { World = world; SimState = SimulationState.Simulating; TurnsLeft = 30}
 
-type SimulationResult = {
-    score: float
-    states: GameState[]
-    brain: ActorChromosome
-  }
-
 let simulateGame random brain fitnessFunction initialState =
   let states = ResizeArray<GameState>()
   states.Add(initialState)

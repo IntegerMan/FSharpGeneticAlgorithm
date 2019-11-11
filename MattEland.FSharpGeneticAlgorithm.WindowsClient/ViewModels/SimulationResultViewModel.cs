@@ -1,16 +1,16 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using MattEland.FSharpGeneticAlgorithm.Logic;
+using MattEland.FSharpGeneticAlgorithm.Genetics;
 
 namespace MattEland.FSharpGeneticAlgorithm.WindowsClient.ViewModels
 {
     public class SimulationResultViewModel : NotifyPropertyChangedBase
     {
-        private readonly Simulator.SimulationResult _result;
+        private readonly Genes.SimulationResult _result;
         private readonly ObservableCollection<GameStateViewModel> _states;
         private int _currentIndex;
 
-        public SimulationResultViewModel(Simulator.SimulationResult result)
+        public SimulationResultViewModel(Genes.SimulationResult result)
         {
             _result = result;
             _states = new ObservableCollection<GameStateViewModel>();
@@ -45,5 +45,6 @@ namespace MattEland.FSharpGeneticAlgorithm.WindowsClient.ViewModels
 
         public int MaxStateIndex => _states.Count - 1;
         public BrainInfoViewModel Brain { get; }
+        public Genes.SimulationResult Model => _result;
     }
 }

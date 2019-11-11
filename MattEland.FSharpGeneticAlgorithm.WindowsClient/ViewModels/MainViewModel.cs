@@ -1,9 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using MattEland.FSharpGeneticAlgorithm.Genetics;
 using MattEland.FSharpGeneticAlgorithm.Logic;
-using Microsoft.FSharp.Core;
 
 namespace MattEland.FSharpGeneticAlgorithm.WindowsClient.ViewModels
 {
@@ -38,13 +38,17 @@ namespace MattEland.FSharpGeneticAlgorithm.WindowsClient.ViewModels
 
         private void RandomizeBrains()
         {
-            var initialState = Simulator.buildStartingState(_random);
+            var generation = Genetics.Population.simulateFirstGeneration(_random);
 
+            UpdatePopulation(generation);
+        }
+
+        private void UpdatePopulation(IEnumerable<Genes.SimulationResult> generation)
+        {
             Population.Clear();
-            for (int i = 0; i <= 10; i++)
+            foreach (var result in generation)
             {
-                var brain = Genes.getRandomChromosome(_random, _nextId++);
-                Population.Add(new SimulationResultViewModel(Simulator.simulate(_random, brain, initialState)));
+                Population.Add(new SimulationResultViewModel(result));
             }
 
             SelectedBrain = Population.First();
@@ -52,6 +56,10 @@ namespace MattEland.FSharpGeneticAlgorithm.WindowsClient.ViewModels
 
         private void AdvanceToNextGeneration()
         {
+            var priorResults = Population.Select(p => p.Model).ToArray();
+            var generation = Genetics.Population.mutateAndSimulateGeneration(_random, priorResults);
+
+            UpdatePopulation(generation);
         }
 
         public ActionCommand BrainCommand { get; }

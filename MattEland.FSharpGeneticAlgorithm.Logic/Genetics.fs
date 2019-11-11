@@ -3,6 +3,7 @@
   open MattEland.FSharpGeneticAlgorithm.Logic.WorldPos
   open MattEland.FSharpGeneticAlgorithm.Logic.Actors
   open MattEland.FSharpGeneticAlgorithm.Logic.World
+  open MattEland.FSharpGeneticAlgorithm.Logic.States
 
   type ActorChromosome =
     {
@@ -41,3 +42,9 @@
     evaluateProximity world.Acorn pos brain.acornImportance + 
     evaluateProximity world.Tree pos brain.treeImportance + 
     (random.NextDouble() * brain.randomImportance)
+
+  type SimulationResult = {
+    score: float
+    states: GameState[]
+    brain: ActorChromosome
+  }

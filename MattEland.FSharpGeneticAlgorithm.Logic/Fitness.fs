@@ -16,7 +16,7 @@ let standardFitnessFunction (gameStates: GameState[]): float =
 
   let finalStateBonus =
     match lastState.SimState with
-    | SimulationState.Won  -> 100.0 - gameLength
+    | SimulationState.Won  -> 100.0 - gameLength // Reward quick wins
     | SimulationState.Lost -> -50.0 + gameLength
     | _                    -> 0.0 + gameLength
 
