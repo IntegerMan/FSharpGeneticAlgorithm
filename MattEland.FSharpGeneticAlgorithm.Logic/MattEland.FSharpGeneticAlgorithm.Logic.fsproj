@@ -10,6 +10,8 @@
     <Compile Include="World.fs" />
     <Compile Include="WorldGeneration.fs" />
     <Compile Include="Genetics.fs" />
+    <Compile Include="States.fs" />
+    <Compile Include="Fitness.fs" />
     <Compile Include="Simulator.fs" />
   </ItemGroup>
 

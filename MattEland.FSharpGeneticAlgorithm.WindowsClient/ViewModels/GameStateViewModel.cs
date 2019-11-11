@@ -12,9 +12,9 @@ namespace MattEland.FSharpGeneticAlgorithm.WindowsClient.ViewModels
     /// </summary>
     public class GameStateViewModel : NotifyPropertyChangedBase
     {
-        private readonly Simulator.GameState _state;
+        private readonly States.GameState _state;
 
-        public GameStateViewModel([NotNull] Simulator.GameState state)
+        public GameStateViewModel([NotNull] States.GameState state)
         {
             _state = state ?? throw new ArgumentNullException(nameof(state));
 
@@ -28,15 +28,15 @@ namespace MattEland.FSharpGeneticAlgorithm.WindowsClient.ViewModels
 
         public string GameStatusText => _state.SimState switch
         {
-            Simulator.SimulationState.Won => "Won",
-            Simulator.SimulationState.Lost => "Lost",
+            States.SimulationState.Won => "Won",
+            States.SimulationState.Lost => "Lost",
             _ => "Simulating"
         };
 
         public Brush GameStatusBrush => _state.SimState switch
         {
-            Simulator.SimulationState.Won => Brushes.MediumSeaGreen,
-            Simulator.SimulationState.Lost => Brushes.LightCoral,
+            States.SimulationState.Won => Brushes.MediumSeaGreen,
+            States.SimulationState.Lost => Brushes.LightCoral,
             _ => Brushes.LightGray
         };
 

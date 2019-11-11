@@ -5,6 +5,7 @@ open FsUnit
 open MattEland.FSharpGeneticAlgorithm.Logic.WorldPos
 open MattEland.FSharpGeneticAlgorithm.Logic.Actors
 open MattEland.FSharpGeneticAlgorithm.Logic.World
+open MattEland.FSharpGeneticAlgorithm.Logic.States
 open MattEland.FSharpGeneticAlgorithm.Logic.WorldGeneration
 open MattEland.FSharpGeneticAlgorithm.Logic.Simulator
 

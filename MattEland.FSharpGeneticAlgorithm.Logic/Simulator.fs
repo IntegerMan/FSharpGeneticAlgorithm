@@ -3,12 +3,10 @@
 open MattEland.FSharpGeneticAlgorithm.Logic.WorldPos
 open MattEland.FSharpGeneticAlgorithm.Logic.World
 open MattEland.FSharpGeneticAlgorithm.Logic.Actors
+open MattEland.FSharpGeneticAlgorithm.Logic.States
+open MattEland.FSharpGeneticAlgorithm.Logic.Fitness
 open MattEland.FSharpGeneticAlgorithm.Logic.WorldGeneration
 open MattEland.FSharpGeneticAlgorithm.Genetics.Genes
-
-type SimulationState = Simulating=0 | Won=1 | Lost=2
-
-type GameState = { World : World; SimState: SimulationState; TurnsLeft: int}
 
 let canEnterActorCell actor target =
   match target with
@@ -143,7 +141,7 @@ type SimulationResult = {
     brain: ActorChromosome
   }
 
-let simulateGame random brain initialState =
+let simulateGame random brain fitnessFunction initialState =
   let states = ResizeArray<GameState>()
   states.Add(initialState)
   let mutable currentState = initialState
@@ -151,9 +149,13 @@ let simulateGame random brain initialState =
     currentState <- handleChromosomeMove random brain currentState
     states.Add(currentState)
   {
-    score = 0.0; // TODO: Actually score
+    score = evaluateFitness(states.ToArray(), fitnessFunction)
     states = states.ToArray();
     brain = brain
   }
 
-let simulate random brain = buildStartingState random |> simulateGame random brain
+let simulate random brain initialState =
+  simulateGame random brain standardFitnessFunction initialState
+
+let simulateRandomWorld random brain = 
+  buildStartingState random |> simulate random brain

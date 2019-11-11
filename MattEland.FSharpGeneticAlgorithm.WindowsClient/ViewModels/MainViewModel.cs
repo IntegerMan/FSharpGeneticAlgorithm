@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using MattEland.FSharpGeneticAlgorithm.Genetics;
 using MattEland.FSharpGeneticAlgorithm.Logic;
+using Microsoft.FSharp.Core;
 
 namespace MattEland.FSharpGeneticAlgorithm.WindowsClient.ViewModels
 {
@@ -37,11 +38,13 @@ namespace MattEland.FSharpGeneticAlgorithm.WindowsClient.ViewModels
 
         private void RandomizeBrains()
         {
+            var initialState = Simulator.buildStartingState(_random);
+
             Population.Clear();
             for (int i = 0; i <= 10; i++)
             {
                 var brain = Genes.getRandomChromosome(_random, _nextId++);
-                Population.Add(new SimulationResultViewModel(Simulator.simulate(_random, brain)));
+                Population.Add(new SimulationResultViewModel(Simulator.simulate(_random, brain, initialState)));
             }
 
             SelectedBrain = Population.First();
