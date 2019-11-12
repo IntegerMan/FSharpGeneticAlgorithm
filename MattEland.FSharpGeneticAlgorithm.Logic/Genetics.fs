@@ -5,26 +5,18 @@
   open MattEland.FSharpGeneticAlgorithm.Logic.World
   open MattEland.FSharpGeneticAlgorithm.Logic.States
 
+  type ActorGeneIndex = Doggo = 0| Acorn = 1| Rabbit = 2| Tree = 3| Squirrel = 4 | Random = 5
+
   type ActorChromosome =
     {
-      dogImportance: double
-      acornImportance: double
-      rabbitImportance: double
-      treeImportance: double
-      squirrelImportance: double
-      randomImportance: double
+      genes: double[]
     }
 
   let getRandomGene (random: System.Random) = (random.NextDouble() * 2.0) - 1.0
 
   let getRandomChromosome (random: System.Random) = 
     {
-      dogImportance = getRandomGene random;
-      acornImportance = getRandomGene random;
-      rabbitImportance = getRandomGene random;
-      treeImportance = getRandomGene random;
-      squirrelImportance = getRandomGene random;
-      randomImportance = getRandomGene random;
+      genes = Seq.init 6 (fun _ -> getRandomGene random) |> Seq.toArray
     }
 
   let getChildGene (random: System.Random, value1, value2, mutationChance) =
@@ -38,13 +30,9 @@
     value
 
   let createChild (random: System.Random, parent1: ActorChromosome, parent2: ActorChromosome, mutationChance: float) =
+    let genes = Seq.map2 (fun m f -> getChildGene(random, m, f, mutationChance)) parent1.genes parent2.genes
     {
-      dogImportance = getChildGene(random, parent1.dogImportance, parent2.dogImportance, mutationChance);
-      acornImportance = getChildGene(random, parent1.acornImportance, parent2.acornImportance, mutationChance);
-      rabbitImportance = getChildGene(random, parent1.rabbitImportance, parent2.rabbitImportance, mutationChance);
-      treeImportance = getChildGene(random, parent1.treeImportance, parent2.treeImportance, mutationChance);
-      squirrelImportance = getChildGene(random, parent1.squirrelImportance, parent2.squirrelImportance, mutationChance);
-      randomImportance = getChildGene(random, parent1.randomImportance, parent2.randomImportance, mutationChance);
+      genes = Seq.toArray genes
     }
     
 
@@ -54,13 +42,17 @@
     else
       0.0
 
+  let getGene (geneIndex: ActorGeneIndex) (genes: double[]) =
+    genes.[int geneIndex]
+
   let evaluateTile brain world pos (random: System.Random) =
-    evaluateProximity world.Squirrel pos brain.squirrelImportance + 
-    evaluateProximity world.Rabbit pos brain.rabbitImportance + 
-    evaluateProximity world.Doggo pos brain.dogImportance + 
-    evaluateProximity world.Acorn pos brain.acornImportance + 
-    evaluateProximity world.Tree pos brain.treeImportance + 
-    (random.NextDouble() * brain.randomImportance)
+    let genes = brain.genes
+    evaluateProximity world.Squirrel pos (getGene ActorGeneIndex.Squirrel genes) + 
+    evaluateProximity world.Rabbit pos (getGene ActorGeneIndex.Rabbit genes) + 
+    evaluateProximity world.Doggo pos (getGene ActorGeneIndex.Doggo genes) + 
+    evaluateProximity world.Acorn pos (getGene ActorGeneIndex.Acorn genes) + 
+    evaluateProximity world.Tree pos (getGene ActorGeneIndex.Tree genes) + 
+    (random.NextDouble() * (getGene ActorGeneIndex.Random genes))
 
   type SimulationResult = {
     score: float
