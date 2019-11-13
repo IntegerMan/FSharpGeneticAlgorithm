@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using MattEland.FSharpGeneticAlgorithm.Genetics;
 
 namespace MattEland.FSharpGeneticAlgorithm.WindowsClient.ViewModels
@@ -13,14 +14,14 @@ namespace MattEland.FSharpGeneticAlgorithm.WindowsClient.ViewModels
         {
             Model = result;
             _states = new ObservableCollection<GameStateViewModel>();
-            foreach (var state in Model.states)
+            foreach (var state in Model.results.SelectMany(r => r.states))
             {
                 _states.Add(new GameStateViewModel(state));
             }
             Brain = new BrainInfoViewModel(result.brain);
         }
 
-        public double Score => Model.score;
+        public double Score => Model.totalScore;
         public string ScoreText => $"Score: {Score:F1}";
 
         public string DisplayText => $"Brain - {ScoreText}";

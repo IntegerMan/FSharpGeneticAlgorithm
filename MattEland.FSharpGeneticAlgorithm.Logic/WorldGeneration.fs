@@ -48,6 +48,9 @@ let makeWorld maxX maxY random =
     Acorn = actors.[3]
     Rabbit = actors.[4] }
 
+let makeWorlds (random: System.Random, count: int) = 
+  Seq.init count (fun _ -> makeWorld 13 13 random.Next) |> Seq.toArray
+
 let makeDefaultWorld() =
   let random = new System.Random()
   makeWorld 13 13 random.Next

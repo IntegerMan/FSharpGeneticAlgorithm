@@ -1,22 +1,21 @@
 ﻿module MattEland.FSharpGeneticAlgorithm.Genetics.Population
 
+open MattEland.FSharpGeneticAlgorithm.Logic.States
 open MattEland.FSharpGeneticAlgorithm.Logic.Simulator
 open MattEland.FSharpGeneticAlgorithm.Genetics.Genes
+open MattEland.FSharpGeneticAlgorithm.Logic.World
 
-let simulateGeneration random actors =
-  let initialState = buildStartingState random
-  actors |> Seq.map (fun b -> simulate random b initialState) |> Seq.sortByDescending (fun r -> r.score)
+let simulateGeneration states random actors =
+  actors 
+  |> Seq.map (fun b -> simulate random b states) 
+  |> Seq.sortByDescending (fun r -> r.totalScore)
 
 let buildInitialPopulation random =
-  seq {
-    for id in 1 .. 10 do
-      let brain = getRandomChromosome random
-      yield brain
-  }
+  Seq.init<ActorChromosome> 10 (fun _ -> getRandomChromosome random)
   
-let simulateFirstGeneration random =
+let simulateFirstGeneration states random =
   buildInitialPopulation random 
-  |> simulateGeneration random
+  |> simulateGeneration states random
   
 let mutateBrains (random: System.Random, brains: ActorChromosome[]): ActorChromosome[] =
   if brains.Length <> 10 then failwith "Expecting exactly 10 entries"
@@ -37,7 +36,6 @@ let mutateBrains (random: System.Random, brains: ActorChromosome[]): ActorChromo
 
   Array.append children randos |> Array.append survivors
 
-let mutateAndSimulateGeneration (random: System.Random, results: SimulationResult[]) =
+let mutateAndSimulateGeneration (random: System.Random, worlds: World[], results: SimulationResult[]) =
   let brains = Seq.map (fun b -> b.brain) results |> Seq.toArray
-  mutateBrains(random, brains) |> simulateGeneration random
- 
+  mutateBrains(random, brains) |> simulateGeneration worlds random

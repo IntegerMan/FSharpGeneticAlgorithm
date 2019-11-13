@@ -69,8 +69,13 @@
     evaluateProximity world.Tree pos (getGene ActorGeneIndex.Tree genes) + 
     (random.NextDouble() * (getGene ActorGeneIndex.Random genes))
 
-  type SimulationResult = {
+  type IndividualWorldResult = {
     score: float
     states: GameState[]
+  }
+
+  type SimulationResult = {
+    totalScore: float
+    results: IndividualWorldResult[]
     brain: ActorChromosome
   }

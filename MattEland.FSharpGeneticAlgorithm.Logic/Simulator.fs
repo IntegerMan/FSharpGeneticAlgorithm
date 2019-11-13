@@ -131,25 +131,33 @@ let handleChromosomeMove random chromosome state =
   else
     state
 
-let buildStartingState (random: System.Random) = 
-  let world = makeWorld 13 13 random.Next
+let buildStartingStateForWorld world =
   { World = world; SimState = SimulationState.Simulating; TurnsLeft = 30}
 
-let simulateGame random brain fitnessFunction initialState =
-  let states = ResizeArray<GameState>()
-  states.Add(initialState)
-  let mutable currentState = initialState
+let buildStartingState (random: System.Random) = 
+  makeWorld 13 13 random.Next |> buildStartingStateForWorld
+
+let simulateIndividualGame random brain fitnessFunction world: IndividualWorldResult =
+  let gameStates = ResizeArray<GameState>()
+  gameStates.Add(world)
+  let mutable currentState = world
   while currentState.SimState = SimulationState.Simulating do
     currentState <- handleChromosomeMove random brain currentState
-    states.Add(currentState)
+    gameStates.Add(currentState)
   {
-    score = evaluateFitness(states.ToArray(), fitnessFunction)
-    states = states.ToArray();
+    score = evaluateFitness(gameStates.ToArray(), fitnessFunction)
+    states = gameStates.ToArray();
+  }
+
+
+let simulateGame random brain fitnessFunction states =
+  let results: IndividualWorldResult seq = Seq.map (fun world -> simulateIndividualGame random brain fitnessFunction world) states
+  {
+    totalScore = Seq.map (fun e -> e.score) results |> Seq.sum
+    results = Seq.toArray results
     brain = brain
   }
 
-let simulate random brain initialState =
-  simulateGame random brain standardFitnessFunction initialState
-
-let simulateRandomWorld random brain = 
-  buildStartingState random |> simulate random brain
+let simulate random brain worlds =
+  let states = Seq.map (fun w -> buildStartingStateForWorld w) worlds
+  simulateGame random brain standardFitnessFunction states

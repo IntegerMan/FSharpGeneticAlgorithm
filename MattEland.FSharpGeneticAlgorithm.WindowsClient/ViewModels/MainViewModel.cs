@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using MattEland.FSharpGeneticAlgorithm.Genetics;
+using MattEland.FSharpGeneticAlgorithm.Logic;
 
 namespace MattEland.FSharpGeneticAlgorithm.WindowsClient.ViewModels
 {
@@ -12,11 +13,30 @@ namespace MattEland.FSharpGeneticAlgorithm.WindowsClient.ViewModels
 
         public MainViewModel()
         {
-            RandomizeCommand = new ActionCommand(RandomizeBrains);
+            ResetCommand = new ActionCommand(Reset);
+            RandomizeCommand = new ActionCommand(RandomizeWorlds);
             BrainCommand = new ActionCommand(AdvanceToNextGeneration);
 
+            RandomizeWorlds();
             RandomizeBrains();
         }
+
+        private void RandomizeWorlds()
+        {
+            _worlds = WorldGeneration.makeWorlds(_random, 5);
+            SimulateCurrentPopulation();
+        }
+
+        private void SimulateCurrentPopulation()
+        {
+            if (!Population.Any()) return;
+
+            var pop = Population.Select(p => p.Brain.Model);
+            var result = Genetics.Population.simulateGeneration(_worlds, GetRandomForSimulation(), pop).ToList();
+            UpdatePopulation(result);
+        }
+
+        private Random GetRandomForSimulation() => new Random(42);
 
         public SimulationResultViewModel SelectedBrain
         {
@@ -30,6 +50,7 @@ namespace MattEland.FSharpGeneticAlgorithm.WindowsClient.ViewModels
             }
         }
 
+        public ActionCommand ResetCommand { get; }
         public ActionCommand RandomizeCommand { get; }
 
         public ObservableCollection<SimulationResultViewModel> Population { get; } =
@@ -37,9 +58,15 @@ namespace MattEland.FSharpGeneticAlgorithm.WindowsClient.ViewModels
 
         private void RandomizeBrains()
         {
-            var generation = Genetics.Population.simulateFirstGeneration(_random);
+            var generation = Genetics.Population.simulateFirstGeneration(_worlds, _random);
 
             UpdatePopulation(generation);
+        }
+
+        private void Reset()
+        {
+            RandomizeWorlds();
+            RandomizeBrains();
         }
 
         private void UpdatePopulation(IEnumerable<Genes.SimulationResult> generation)
@@ -56,7 +83,9 @@ namespace MattEland.FSharpGeneticAlgorithm.WindowsClient.ViewModels
         private void AdvanceToNextGeneration()
         {
             var priorResults = Population.Select(p => p.Model).ToArray();
-            var generation = Genetics.Population.mutateAndSimulateGeneration(_random, priorResults);
+
+            var brains = Genetics.Population.mutateBrains(_random, priorResults.Select(r => r.brain).ToArray());
+            var generation = Genetics.Population.simulateGeneration(_worlds, GetRandomForSimulation(), brains).ToList();
 
             UpdatePopulation(generation);
         }
@@ -64,5 +93,6 @@ namespace MattEland.FSharpGeneticAlgorithm.WindowsClient.ViewModels
         public ActionCommand BrainCommand { get; }
 
         private SimulationResultViewModel _brain;
+        private World.World[] _worlds;
     }
 }
