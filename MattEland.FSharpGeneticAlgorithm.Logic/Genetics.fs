@@ -19,22 +19,37 @@
       genes = Seq.init 6 (fun _ -> getRandomGene random) |> Seq.toArray
     }
 
-  let getChildGene (random: System.Random, value1, value2, mutationChance) =
-    let value = match random.Next(2) with
-    | 0 -> value1
-    | _ -> value2
+  let mutate (random: System.Random, magnitude, value) =
+    (value + (random.NextDouble() * magnitude))
+    |> max -1.0 |> min 1.0
 
-    // TODO: Mutate
+  let mutateGenes (random: System.Random) mutationChance genes = 
+    Array.map (fun g -> if random.NextDouble() <= mutationChance then
+                          mutate(random, 0.5, g)
+                        else
+                          g
+              ) genes
 
-    // TODO: Constrain
-    value
+  let getChildGenes (random: System.Random) parent1 parent2 mutationChance =
 
-  let createChild (random: System.Random, parent1: ActorChromosome, parent2: ActorChromosome, mutationChance: float) =
-    let genes = Seq.map2 (fun m f -> getChildGene(random, m, f, mutationChance)) parent1.genes parent2.genes
+    // Map from one parent to another, choosing a point to switch from one parent as the source
+    // to the other. Being an identical copy to either parent is also possible
+    let crossoverIndex = random.Next(Array.length parent1 + 1)
+
+    Array.mapi2 (fun i m f -> if i <= crossoverIndex then
+                                m
+                              else
+                                f
+                ) parent1 parent2
+    // Next allow each gene to be potentially mutated
+    |> mutateGenes random mutationChance
+
+  let createChild (random: System.Random, parent1: double[], parent2: double[], mutationChance: float) =
+
+    let genes = getChildGenes random parent1 parent2 mutationChance
     {
       genes = Seq.toArray genes
     }
-    
 
   let evaluateProximity actor pos weight =
     if actor.IsActive then

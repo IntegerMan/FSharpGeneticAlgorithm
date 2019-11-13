@@ -29,10 +29,10 @@ let mutateBrains (random: System.Random, brains: ActorChromosome[]): ActorChromo
   |]
 
   let children = [| 
-    createChild(random, survivors.[0], survivors.[1], 0.05);
-    createChild(random, survivors.[0], survivors.[1], 0.1);
-    createChild(random, survivors.[0], survivors.[1], 0.25);
-    createChild(random, survivors.[0], survivors.[1], 0.5);
+    createChild(random, survivors.[0].genes, survivors.[1].genes, 0.05);
+    createChild(random, survivors.[0].genes, survivors.[1].genes, 0.1);
+    createChild(random, survivors.[0].genes, survivors.[1].genes, 0.25);
+    createChild(random, survivors.[0].genes, survivors.[1].genes, 0.5);
   |]
 
   Array.append children randos |> Array.append survivors
