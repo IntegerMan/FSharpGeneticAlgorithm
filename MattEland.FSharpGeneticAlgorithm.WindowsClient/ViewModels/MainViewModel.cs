@@ -32,11 +32,9 @@ namespace MattEland.FSharpGeneticAlgorithm.WindowsClient.ViewModels
             if (!Population.Any()) return;
 
             var pop = Population.Select(p => p.Brain.Model);
-            var result = Genetics.Population.simulateGeneration(_worlds, GetRandomForSimulation(), pop).ToList();
+            var result = Genetics.Population.simulateGeneration(_worlds, pop).ToList();
             UpdatePopulation(result);
         }
-
-        private Random GetRandomForSimulation() => new Random(42);
 
         public SimulationResultViewModel SelectedBrain
         {
@@ -85,7 +83,7 @@ namespace MattEland.FSharpGeneticAlgorithm.WindowsClient.ViewModels
             var priorResults = Population.Select(p => p.Model).ToArray();
 
             var brains = Genetics.Population.mutateBrains(_random, priorResults.Select(r => r.brain).ToArray());
-            var generation = Genetics.Population.simulateGeneration(_worlds, GetRandomForSimulation(), brains).ToList();
+            var generation = Genetics.Population.simulateGeneration(_worlds, brains).ToList();
 
             UpdatePopulation(generation);
         }

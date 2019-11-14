@@ -132,7 +132,7 @@ let handleChromosomeMove random chromosome state =
     state
 
 let buildStartingStateForWorld world =
-  { World = world; SimState = SimulationState.Simulating; TurnsLeft = 30}
+  { World = world; SimState = SimulationState.Simulating; TurnsLeft = 50}
 
 let buildStartingState (random: System.Random) = 
   makeWorld 13 13 random.Next |> buildStartingStateForWorld
@@ -149,7 +149,6 @@ let simulateIndividualGame random brain fitnessFunction world: IndividualWorldRe
     states = gameStates.ToArray();
   }
 
-
 let simulateGame random brain fitnessFunction states =
   let results: IndividualWorldResult seq = Seq.map (fun world -> simulateIndividualGame random brain fitnessFunction world) states
   {
@@ -158,6 +157,7 @@ let simulateGame random brain fitnessFunction states =
     brain = brain
   }
 
-let simulate random brain worlds =
+let simulate brain worlds =
   let states = Seq.map (fun w -> buildStartingStateForWorld w) worlds
-  simulateGame random brain standardFitnessFunction states
+  let random = new System.Random(42)
+  simulateGame random brain killRabbitFitnessFunction states
