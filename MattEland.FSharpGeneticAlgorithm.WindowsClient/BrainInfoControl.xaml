@@ -23,7 +23,5 @@
         <ProgressBar Minimum="-1" Maximum="1" Value="{Binding SquirrelPriority, Mode=OneWay}"></ProgressBar>
         <TextBlock Margin="0,10,0,0">Tree</TextBlock>
         <ProgressBar Minimum="-1" Maximum="1" Value="{Binding TreePriority, Mode=OneWay}"></ProgressBar>
-        <TextBlock Margin="0,10,0,0">Random</TextBlock>
-        <ProgressBar Minimum="-1" Maximum="1" Value="{Binding RandomPriority, Mode=OneWay}"></ProgressBar>
     </StackPanel>
 </UserControl>

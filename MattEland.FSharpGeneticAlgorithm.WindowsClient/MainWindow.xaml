@@ -44,8 +44,8 @@
             <Grid Margin="10" Background="Green" DataContext="{Binding SelectedState}">
             <Image Source="Images/Grass.png" Stretch="Fill" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"></Image>
             <Viewbox Stretch="Uniform">
-                <Border>
-                    <ItemsControl ItemsSource="{Binding Actors}" Width="150" Height="150">
+                <Grid>
+                    <ItemsControl ItemsSource="{Binding Actors}" Width="150" Height="150" Panel.ZIndex="1">
                         <ItemsControl.ItemTemplate>
                             <ItemContainerTemplate>
                                 <Border BorderBrush="Black" BorderThickness="1">
@@ -65,7 +65,26 @@
                             </Style>
                         </ItemsControl.ItemContainerStyle>
                     </ItemsControl>
-                </Border>
+                    <ItemsControl ItemsSource="{Binding HeatMap}" Width="150" Height="150">
+                        <ItemsControl.ItemTemplate>
+                            <ItemContainerTemplate>
+                                <Border Background="{Binding Fill}" ToolTip="{Binding Text}" Opacity="0.5" Width="10" Height="10">
+                                </Border>
+                            </ItemContainerTemplate>
+                        </ItemsControl.ItemTemplate>
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <Canvas></Canvas>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemContainerStyle>
+                            <Style TargetType="ContentPresenter">
+                                <Setter Property="Canvas.Left" Value="{Binding PosX}" />
+                                <Setter Property="Canvas.Top" Value="{Binding PosY}" />
+                            </Style>
+                        </ItemsControl.ItemContainerStyle>
+                    </ItemsControl>
+                </Grid>
             </Viewbox>
         </Grid>
         </DockPanel>

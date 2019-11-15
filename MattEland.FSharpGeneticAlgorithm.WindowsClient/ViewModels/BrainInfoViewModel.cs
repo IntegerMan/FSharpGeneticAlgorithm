@@ -20,7 +20,6 @@ namespace MattEland.FSharpGeneticAlgorithm.WindowsClient.ViewModels
         public double TreePriority => GetGene(Genes.ActorGeneIndex.Tree);
         public double NextToDoggoPriority => GetGene(Genes.ActorGeneIndex.NextToDoggo);
         public double NextToRabbitPriority => GetGene(Genes.ActorGeneIndex.NextToRabbit);
-        public double RandomPriority => GetGene(Genes.ActorGeneIndex.Random);
 
         public Genes.ActorChromosome Model { get; }
     }

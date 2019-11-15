@@ -120,11 +120,11 @@ let simulateActors (state: GameState, getRandomNumber) =
   |> simulateDoggo
   |> decreaseTimer
 
-let handleChromosomeMove random chromosome state =
+let handleChromosomeMove (random: System.Random) chromosome state =
   if state.SimState = SimulationState.Simulating then
     let current = state.World.Squirrel.Pos
     let movedPos = getCandidates(current, state.World, true) 
-                   |> Seq.sortBy(fun pos -> evaluateTile chromosome state.World pos random)
+                   |> Seq.sortBy(fun pos -> evaluateTile chromosome state.World pos)
                    |> Seq.head
     let newState = moveActor state state.World.Squirrel movedPos
     simulateActors(newState, random.Next)
@@ -132,7 +132,7 @@ let handleChromosomeMove random chromosome state =
     state
 
 let buildStartingStateForWorld world =
-  { World = world; SimState = SimulationState.Simulating; TurnsLeft = 80}
+  { World = world; SimState = SimulationState.Simulating; TurnsLeft = 100}
 
 let buildStartingState (random: System.Random) = 
   makeWorld 15 15 random.Next |> buildStartingStateForWorld
@@ -160,4 +160,4 @@ let simulateGame random brain fitnessFunction states =
 let simulate brain worlds =
   let states = Seq.map (fun w -> buildStartingStateForWorld w) worlds
   let random = new System.Random(42)
-  simulateGame random brain standardFitnessFunction states
+  simulateGame random brain killRabbitFitnessFunction states

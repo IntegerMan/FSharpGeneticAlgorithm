@@ -16,7 +16,7 @@ namespace MattEland.FSharpGeneticAlgorithm.WindowsClient.ViewModels
             _states = new ObservableCollection<GameStateViewModel>();
             foreach (var state in Model.results.SelectMany(r => r.states))
             {
-                _states.Add(new GameStateViewModel(state));
+                _states.Add(new GameStateViewModel(state, result.brain));
             }
             Brain = new BrainInfoViewModel(result.brain);
         }
