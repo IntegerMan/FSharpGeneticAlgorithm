@@ -15,7 +15,8 @@ namespace MattEland.FSharpGeneticAlgorithm.WindowsClient.ViewModels
         {
             ResetCommand = new ActionCommand(Reset);
             RandomizeCommand = new ActionCommand(RandomizeWorlds);
-            BrainCommand = new ActionCommand(AdvanceToNextGeneration);
+            AdvanceCommand = new ActionCommand(AdvanceToNextGeneration);
+            Advance10Command = new ActionCommand(AdvanceToNext10Generation);
 
             RandomizeWorlds();
             RandomizeBrains();
@@ -23,7 +24,7 @@ namespace MattEland.FSharpGeneticAlgorithm.WindowsClient.ViewModels
 
         private void RandomizeWorlds()
         {
-            _worlds = WorldGeneration.makeWorlds(_random, 5);
+            _worlds = WorldGeneration.makeWorlds(_random, 10);
             SimulateCurrentPopulation();
         }
 
@@ -50,6 +51,8 @@ namespace MattEland.FSharpGeneticAlgorithm.WindowsClient.ViewModels
 
         public ActionCommand ResetCommand { get; }
         public ActionCommand RandomizeCommand { get; }
+        public ActionCommand AdvanceCommand { get; }
+        public ActionCommand Advance10Command { get; }
 
         public ObservableCollection<SimulationResultViewModel> Population { get; } =
             new ObservableCollection<SimulationResultViewModel>();
@@ -78,6 +81,15 @@ namespace MattEland.FSharpGeneticAlgorithm.WindowsClient.ViewModels
             SelectedBrain = Population.First();
         }
 
+        private void AdvanceToNext10Generation()
+        {
+            var priorResults = Population.Select(p => p.Model).ToArray();
+
+            var generation = Genetics.Population.mutateAndSimulateMultiple(_random, _worlds, 10, priorResults);
+
+            UpdatePopulation(generation);
+        }
+
         private void AdvanceToNextGeneration()
         {
             var priorResults = Population.Select(p => p.Model).ToArray();
@@ -87,8 +99,6 @@ namespace MattEland.FSharpGeneticAlgorithm.WindowsClient.ViewModels
 
             UpdatePopulation(generation);
         }
-
-        public ActionCommand BrainCommand { get; }
 
         private SimulationResultViewModel _brain;
         private World.World[] _worlds;

@@ -23,8 +23,9 @@ namespace MattEland.FSharpGeneticAlgorithm.WindowsClient.ViewModels
 
         public double Score => Model.totalScore;
         public string ScoreText => $"Score: {Score:F1}";
+        public int Age => Model.brain.age;
 
-        public string DisplayText => $"Brain - {ScoreText}";
+        public string DisplayText => $"Gen {Age} - {ScoreText}";
 
         public IEnumerable<GameStateViewModel> States => _states; 
 
