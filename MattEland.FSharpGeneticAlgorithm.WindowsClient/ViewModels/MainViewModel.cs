@@ -49,6 +49,17 @@ namespace MattEland.FSharpGeneticAlgorithm.WindowsClient.ViewModels
             }
         }
 
+        public bool ShowHeatMap
+        {
+            get => _showHeatMap;
+            set
+            {
+                if (value == _showHeatMap) return;
+                _showHeatMap = value;
+                OnPropertyChanged();
+            }
+        }
+
         public ActionCommand ResetCommand { get; }
         public ActionCommand RandomizeCommand { get; }
         public ActionCommand AdvanceCommand { get; }
@@ -102,5 +113,6 @@ namespace MattEland.FSharpGeneticAlgorithm.WindowsClient.ViewModels
 
         private SimulationResultViewModel _brain;
         private World.World[] _worlds;
+        private bool _showHeatMap;
     }
 }

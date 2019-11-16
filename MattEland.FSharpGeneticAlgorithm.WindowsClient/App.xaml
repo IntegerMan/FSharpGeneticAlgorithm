@@ -4,5 +4,6 @@
              xmlns:local="clr-namespace:MattEland.FSharpGeneticAlgorithm.WindowsClient"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
+        <BooleanToVisibilityConverter x:Key="VisibilityConverter"></BooleanToVisibilityConverter>
     </Application.Resources>
 </Application>
