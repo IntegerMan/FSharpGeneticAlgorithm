@@ -11,12 +11,17 @@ namespace MattEland.FSharpGeneticAlgorithm.WindowsClient.ViewModels
             Model = brain ?? throw new ArgumentNullException(nameof(brain));
         }
 
-        public double SquirrelPriority => Model.squirrelImportance;
-        public double DoggoPriority => Model.dogImportance;
-        public double RabbitPriority => Model.rabbitImportance;
-        public double AcornPriority => Model.acornImportance;
-        public double TreePriority => Model.treeImportance;
-        public double RandomPriority => Model.randomImportance;
+        private double GetGene(Genes.ActorGeneIndex actor) => Genes.getGene(actor, Model.genes);
+
+        public double SquirrelPriority => GetGene(Genes.ActorGeneIndex.Squirrel);
+        public double DoggoPriority => GetGene(Genes.ActorGeneIndex.Doggo);
+        public double RabbitPriority => GetGene(Genes.ActorGeneIndex.Rabbit);
+        public double AcornPriority => GetGene(Genes.ActorGeneIndex.Acorn);
+        public double TreePriority => GetGene(Genes.ActorGeneIndex.Tree);
+        public double NextToDoggoPriority => GetGene(Genes.ActorGeneIndex.NextToDoggo);
+        public double NextToRabbitPriority => GetGene(Genes.ActorGeneIndex.NextToRabbit);
+
         public Genes.ActorChromosome Model { get; }
     }
 }
+

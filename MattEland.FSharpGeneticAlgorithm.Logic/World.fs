@@ -23,11 +23,6 @@ let tryGetActor(x, y) (world:World) =
   world.Actors 
   |> Seq.tryFind(fun actor -> actor.IsActive && actor.Pos.X = x && actor.Pos.Y = y)
 
-let getCharacterAtCell(x, y) (world:World) =
-  match tryGetActor(x,y) world with
-  | Some actor -> getChar actor
-  | None -> '.'
-
 let isValidPos pos world = 
   pos.X >= 1 && pos.Y >= 1 && pos.X <= world.MaxX && pos.Y <= world.MaxY
 

@@ -3,11 +3,10 @@
 open MattEland.FSharpGeneticAlgorithm.Logic.WorldPos
 open MattEland.FSharpGeneticAlgorithm.Logic.World
 open MattEland.FSharpGeneticAlgorithm.Logic.Actors
+open MattEland.FSharpGeneticAlgorithm.Logic.States
+open MattEland.FSharpGeneticAlgorithm.Logic.Fitness
+open MattEland.FSharpGeneticAlgorithm.Logic.WorldGeneration
 open MattEland.FSharpGeneticAlgorithm.Genetics.Genes
-
-type SimulationState = Simulating=0 | Won=1 | Lost=2
-
-type GameState = { World : World; SimState: SimulationState; TurnsLeft: int}
 
 let canEnterActorCell actor target =
   match target with
@@ -30,16 +29,17 @@ let moveActor state actor pos =
 
   let handleDogMove state otherActor =
     if otherActor.ActorKind = Rabbit then
-      {state with World = {world with
+      {
+        state with World = {world with
         Rabbit = {world.Rabbit with IsActive = false}
         Doggo = {world.Doggo with Pos = pos}
       }}
     else
-      {state with SimState = SimulationState.Lost; World = {world with
+      {
+        state with SimState = SimulationState.Lost; World = {world with
         Squirrel = {world.Squirrel with IsActive = false}
         Doggo = {world.Doggo with Pos = pos}
-        }
-      }
+      }}
 
   let handleSquirrelMove otherActor hasAcorn =
     if not hasAcorn && otherActor.ActorKind = Acorn && otherActor.IsActive then
@@ -93,7 +93,7 @@ let moveRandomly state actor getRandomNumber =
 
   moveActor state actor movedPos
 
-let simulateDoggo (state: GameState) =
+let simulateDoggo state =
   let doggo = state.World.Doggo
   let rabbit = state.World.Rabbit
   let squirrel = state.World.Squirrel
@@ -120,13 +120,44 @@ let simulateActors (state: GameState, getRandomNumber) =
   |> simulateDoggo
   |> decreaseTimer
 
-let handleChromosomeMove (state: GameState, random: System.Random, chromosome: ActorChromosome) =
+let handleChromosomeMove (random: System.Random) chromosome state =
   if state.SimState = SimulationState.Simulating then
     let current = state.World.Squirrel.Pos
     let movedPos = getCandidates(current, state.World, true) 
-                   |> Seq.sortBy(fun pos -> evaluateTile(chromosome, state.World, pos, random))
+                   |> Seq.sortBy(fun pos -> evaluateTile chromosome state.World pos)
                    |> Seq.head
     let newState = moveActor state state.World.Squirrel movedPos
     simulateActors(newState, random.Next)
   else
     state
+
+let buildStartingStateForWorld world =
+  { World = world; SimState = SimulationState.Simulating; TurnsLeft = 100}
+
+let buildStartingState (random: System.Random) = 
+  makeWorld 15 15 random.Next |> buildStartingStateForWorld
+
+let simulateIndividualGame random brain fitnessFunction world: IndividualWorldResult =
+  let gameStates = ResizeArray<GameState>()
+  gameStates.Add(world)
+  let mutable currentState = world
+  while currentState.SimState = SimulationState.Simulating do
+    currentState <- handleChromosomeMove random brain currentState
+    gameStates.Add(currentState)
+  {
+    score = evaluateFitness(gameStates.ToArray(), fitnessFunction)
+    states = gameStates.ToArray();
+  }
+
+let simulateGame random brain fitnessFunction states =
+  let results: IndividualWorldResult seq = Seq.map (fun world -> simulateIndividualGame random brain fitnessFunction world) states
+  {
+    totalScore = Seq.map (fun e -> e.score) results |> Seq.sum
+    results = Seq.toArray results
+    brain = {brain with age = brain.age + 1}
+  }
+
+let simulate brain worlds =
+  let states = Seq.map (fun w -> buildStartingStateForWorld w) worlds
+  let random = new System.Random(42)
+  simulateGame random brain killRabbitFitnessFunction states

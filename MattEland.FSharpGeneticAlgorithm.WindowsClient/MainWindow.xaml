@@ -5,17 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:windowsClient="clr-namespace:MattEland.FSharpGeneticAlgorithm.WindowsClient"
         mc:Ignorable="d"
-        Title="WPF Core C# talking to F# Tutorial by Matt Eland" 
-        Width="755" Height="650"
+        Title="Genetic Algorithms in F# and WPF Core by Matt Eland" 
+        Width="725" Height="650"
         Background="Black" Foreground="White">
-    <Window.Resources>
-        <Style TargetType="Button" x:Key="CommandButtonStyle">
-            <Setter Property="Margin" Value="0,5,0,5"></Setter>
-        </Style>
-    </Window.Resources>
     <DockPanel>
         <!-- Status Bar -->
-        <StatusBar DockPanel.Dock="Bottom" Background="{Binding GameStatusBrush}" FontWeight="Bold">
+        <StatusBar DockPanel.Dock="Bottom" DataContext="{Binding SelectedBrain.SelectedState}" Background="{Binding GameStatusBrush}" FontWeight="Bold">
             <StatusBarItem>
                 <TextBlock Text="{Binding TurnsLeftText}"></TextBlock>
             </StatusBarItem>
@@ -24,21 +19,34 @@
             </StatusBarItem>
         </StatusBar>
         <!-- Commands Area -->
-        <Border DockPanel.Dock="Right" Width="150">
-            <StackPanel Margin="0,8,12,0">
-                <Button Style="{StaticResource CommandButtonStyle}" Command="{Binding BrainCommand}">AI Move</Button>
-                <Button Style="{StaticResource CommandButtonStyle}" Command="{Binding RandomizeCommand}">Randomize Brain</Button>
-                <Button Style="{StaticResource CommandButtonStyle}" Command="{Binding ResetCommand}">Restart</Button>
-
-                <windowsClient:BrainInfoControl DataContext="{Binding Brain}"></windowsClient:BrainInfoControl>
+        <DockPanel DockPanel.Dock="Right" Width="150" Margin="0,0,8,8">
+            <StackPanel Margin="0,8,0,0" DockPanel.Dock="Top">
+                <Button Margin="0,5" Command="{Binding AdvanceCommand}">Next Generation</Button>
+                <Button Margin="0,5" Command="{Binding Advance10Command}">Next 10 Generations</Button>
+                <Button Margin="0,5" Command="{Binding RandomizeCommand}">Randomize Worlds</Button>
+                <Button Margin="0,5" Command="{Binding ResetCommand}">Reset</Button>
+                <CheckBox IsChecked="{Binding ShowHeatMap}" x:Name="checkShowHeatMap" Foreground="White">Show Tile Attractiveness</CheckBox>
             </StackPanel>
-        </Border>
+            <TextBlock DockPanel.Dock="Top" FontWeight="Bold" Margin="0,10">Population</TextBlock>
+            <windowsClient:BrainInfoControl DockPanel.Dock="Bottom" 
+                                            DataContext="{Binding SelectedBrain.Brain}"></windowsClient:BrainInfoControl>
+            <ListBox ItemsSource="{Binding Population}" SelectedItem="{Binding SelectedBrain}" DisplayMemberPath="DisplayText"></ListBox>
+
+        </DockPanel>
         <!-- Main UI -->
-        <Grid Margin="10" Background="Green">
+        <DockPanel DataContext="{Binding SelectedBrain}">
+
+            <!-- Time Control -->
+            <DockPanel DockPanel.Dock="Bottom" Margin="10">
+                <TextBlock DockPanel.Dock="Left" Margin="0,0,10,0">Time Index</TextBlock>
+                <Slider Minimum="0" Maximum="{Binding MaxStateIndex}" Value="{Binding CurrentIndex}"></Slider>
+            </DockPanel>
+
+            <Grid Margin="10" Background="Green" DataContext="{Binding SelectedState}">
             <Image Source="Images/Grass.png" Stretch="Fill" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"></Image>
             <Viewbox Stretch="Uniform">
-                <Border BorderThickness="1" BorderBrush="DarkGreen">
-                    <ItemsControl ItemsSource="{Binding Actors}" Width="130" Height="130">
+                <Grid>
+                    <ItemsControl ItemsSource="{Binding Actors}" Width="150" Height="150" Panel.ZIndex="1">
                         <ItemsControl.ItemTemplate>
                             <ItemContainerTemplate>
                                 <Border BorderBrush="Black" BorderThickness="1">
@@ -58,8 +66,28 @@
                             </Style>
                         </ItemsControl.ItemContainerStyle>
                     </ItemsControl>
-                </Border>
+                    <ItemsControl ItemsSource="{Binding HeatMap}" Visibility="{Binding ElementName=checkShowHeatMap, Path=IsChecked, Converter={StaticResource VisibilityConverter}}" Width="150" Height="150">
+                        <ItemsControl.ItemTemplate>
+                            <ItemContainerTemplate>
+                                <Border Background="{Binding Fill}" ToolTip="{Binding Text}" Opacity="0.5" Width="10" Height="10">
+                                </Border>
+                            </ItemContainerTemplate>
+                        </ItemsControl.ItemTemplate>
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <Canvas></Canvas>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemContainerStyle>
+                            <Style TargetType="ContentPresenter">
+                                <Setter Property="Canvas.Left" Value="{Binding PosX}" />
+                                <Setter Property="Canvas.Top" Value="{Binding PosY}" />
+                            </Style>
+                        </ItemsControl.ItemContainerStyle>
+                    </ItemsControl>
+                </Grid>
             </Viewbox>
         </Grid>
+        </DockPanel>
     </DockPanel>
 </Window>

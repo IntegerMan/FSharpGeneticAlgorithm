@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Windows.Media;
 using MattEland.FSharpGeneticAlgorithm.Genetics;
 using MattEland.FSharpGeneticAlgorithm.Logic;
 
@@ -11,88 +10,109 @@ namespace MattEland.FSharpGeneticAlgorithm.WindowsClient.ViewModels
     internal class MainViewModel : NotifyPropertyChangedBase
     {
         private readonly Random _random = new Random();
-        private Simulator.GameState _state;
 
         public MainViewModel()
         {
-            RandomizeCommand = new ActionCommand(RandomizeBrain);
-            BrainCommand = new ActionCommand(GetArtificialIntelligenceMove);
             ResetCommand = new ActionCommand(Reset);
+            RandomizeCommand = new ActionCommand(RandomizeWorlds);
+            AdvanceCommand = new ActionCommand(AdvanceToNextGeneration);
+            Advance10Command = new ActionCommand(AdvanceToNext10Generation);
 
-            RandomizeBrain();
-
-            Reset();
+            RandomizeWorlds();
+            RandomizeBrains();
         }
 
-        public BrainInfoViewModel Brain
+        private void RandomizeWorlds()
+        {
+            _worlds = WorldGeneration.makeWorlds(_random, 10);
+            SimulateCurrentPopulation();
+        }
+
+        private void SimulateCurrentPopulation()
+        {
+            if (!Population.Any()) return;
+
+            var pop = Population.Select(p => p.Brain.Model);
+            var result = Genetics.Population.simulateGeneration(_worlds, pop).ToList();
+            UpdatePopulation(result);
+        }
+
+        public SimulationResultViewModel SelectedBrain
         {
             get => _brain;
             set {
                 if (_brain != value)
                 {
                     _brain = value;
-                    OnPropertyChanged();
+                    OnPropertyChanged(string.Empty);
                 }
             }
         }
 
-        public ActionCommand RandomizeCommand { get; }
-
-        public IEnumerable<ActorViewModel> Actors => _actors;
-
-        private void RandomizeBrain() =>
-            Brain = new BrainInfoViewModel(Genes.getRandomChromosome(_random));
-
-        private void GetArtificialIntelligenceMove() => 
-            State = Simulator.handleChromosomeMove(_state, _random, Brain.Model);
+        public bool ShowHeatMap
+        {
+            get => _showHeatMap;
+            set
+            {
+                if (value == _showHeatMap) return;
+                _showHeatMap = value;
+                OnPropertyChanged();
+            }
+        }
 
         public ActionCommand ResetCommand { get; }
-        public ActionCommand BrainCommand { get; }
+        public ActionCommand RandomizeCommand { get; }
+        public ActionCommand AdvanceCommand { get; }
+        public ActionCommand Advance10Command { get; }
+
+        public ObservableCollection<SimulationResultViewModel> Population { get; } =
+            new ObservableCollection<SimulationResultViewModel>();
+
+        private void RandomizeBrains()
+        {
+            var generation = Genetics.Population.simulateFirstGeneration(_worlds, _random);
+
+            UpdatePopulation(generation);
+        }
 
         private void Reset()
         {
-            World.World world = WorldGeneration.makeDefaultWorld();
-            State = new Simulator.GameState(world, Simulator.SimulationState.Simulating, 30);
+            RandomizeWorlds();
+            RandomizeBrains();
         }
 
-        private readonly ObservableCollection<ActorViewModel> _actors = new ObservableCollection<ActorViewModel>();
-        private BrainInfoViewModel _brain;
-
-        public Simulator.GameState State
+        private void UpdatePopulation(IEnumerable<Genes.SimulationResult> generation)
         {
-            get => _state;
-            set
+            Population.Clear();
+            foreach (var result in generation)
             {
-                _state = value;
-
-                _actors.Clear();
-                foreach (var actor in _state.World.Actors.Where(a => a.IsActive))
-                {
-                    _actors.Add(new ActorViewModel(actor));
-                }
-
-                OnPropertyChanged(nameof(GameStatusBrush));
-                OnPropertyChanged(nameof(GameStatusText));
-                OnPropertyChanged(nameof(TurnsLeftText));
+                Population.Add(new SimulationResultViewModel(result));
             }
+
+            SelectedBrain = Population.First();
         }
-        
-        public string GameStatusText => _state.SimState switch
-            {
-                Simulator.SimulationState.Won => "Won",
-                Simulator.SimulationState.Lost => "Lost",
-                _ => "Simulating"
-            };
 
-        public Brush GameStatusBrush => _state.SimState switch
-            {
-                Simulator.SimulationState.Won => Brushes.MediumSeaGreen,
-                Simulator.SimulationState.Lost => Brushes.LightCoral,
-                _ => Brushes.LightGray
-            };
+        private void AdvanceToNext10Generation()
+        {
+            var priorResults = Population.Select(p => p.Model).ToArray();
 
-        public string TurnsLeftText => _state.TurnsLeft == 1 
-                ? "1 Turn Left" 
-                : $"{_state.TurnsLeft} Turns Left";
+            var generation = Genetics.Population.mutateAndSimulateMultiple(_random, _worlds, 10, priorResults);
+
+            UpdatePopulation(generation);
+        }
+
+        private void AdvanceToNextGeneration()
+        {
+            var priorResults = Population.Select(p => p.Model).ToArray();
+
+            var brains = Genetics.Population.mutateBrains(_random, priorResults.Select(r => r.brain).ToArray());
+            var generation = Genetics.Population.simulateGeneration(_worlds, brains).ToList();
+
+            UpdatePopulation(generation);
+        }
+
+        private SimulationResultViewModel _brain;
+        private World.World[] _worlds;
+        private bool _showHeatMap;
     }
 }

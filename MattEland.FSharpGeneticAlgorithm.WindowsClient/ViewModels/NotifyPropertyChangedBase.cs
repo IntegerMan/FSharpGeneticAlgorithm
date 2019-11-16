@@ -4,7 +4,7 @@ using JetBrains.Annotations;
 
 namespace MattEland.FSharpGeneticAlgorithm.WindowsClient.ViewModels
 {
-    internal abstract class NotifyPropertyChangedBase : INotifyPropertyChanged
+    public abstract class NotifyPropertyChangedBase : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 

@@ -14,11 +14,3 @@ type Actor =
     ActorKind : ActorKind;
     IsActive : bool
   }
-
-let getChar actor =
-  match actor.ActorKind with
-  | Squirrel hasAcorn -> match hasAcorn with | true -> 'S' | false -> 's'
-  | Tree _ -> 't'
-  | Acorn _ -> 'a'
-  | Rabbit _ -> 'R'
-  | Doggo _ -> 'D'
