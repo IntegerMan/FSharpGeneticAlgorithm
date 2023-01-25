@@ -23,6 +23,7 @@
             <StackPanel Margin="0,8,0,0" DockPanel.Dock="Top">
                 <Button Margin="0,5" Command="{Binding AdvanceCommand}">Next Generation</Button>
                 <Button Margin="0,5" Command="{Binding Advance10Command}">Next 10 Generations</Button>
+                <Button Margin="0,5" Command="{Binding Advance100Command}">Next 100 Generations</Button>
                 <Button Margin="0,5" Command="{Binding RandomizeCommand}">Randomize Worlds</Button>
                 <Button Margin="0,5" Command="{Binding ResetCommand}">Reset</Button>
                 <CheckBox IsChecked="{Binding ShowHeatMap}" x:Name="checkShowHeatMap" Foreground="White">Show Tile Attractiveness</CheckBox>

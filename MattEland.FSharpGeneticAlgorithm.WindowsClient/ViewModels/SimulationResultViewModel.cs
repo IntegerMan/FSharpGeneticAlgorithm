@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using MattEland.FSharpGeneticAlgorithm.Genetics;
@@ -46,5 +47,17 @@ namespace MattEland.FSharpGeneticAlgorithm.WindowsClient.ViewModels
         public int MaxStateIndex => _states.Count - 1;
         public BrainInfoViewModel Brain { get; }
         public Genes.SimulationResult Model { get; }
+
+        public void AdvanceTimer()
+        {
+            if (CurrentIndex == MaxStateIndex)
+            {
+                CurrentIndex = 0;
+            }
+            else
+            {
+                CurrentIndex++;
+            }
+        }
     }
 }

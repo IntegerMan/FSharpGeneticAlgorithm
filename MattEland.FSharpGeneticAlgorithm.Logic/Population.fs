@@ -10,7 +10,7 @@ let simulateGeneration states actors =
   |> Seq.sortByDescending (fun r -> r.totalScore)
 
 let buildInitialPopulation random =
-  Seq.init<ActorChromosome> 20 (fun _ -> getRandomChromosome random)
+  Seq.init<ActorChromosome> 100 (fun _ -> getRandomChromosome random)
   
 let simulateFirstGeneration states random =
   buildInitialPopulation random |> simulateGeneration states

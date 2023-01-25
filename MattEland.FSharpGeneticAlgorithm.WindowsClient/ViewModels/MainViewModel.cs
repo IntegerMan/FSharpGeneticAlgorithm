@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading;
+using System.Windows.Threading;
 using MattEland.FSharpGeneticAlgorithm.Genetics;
 using MattEland.FSharpGeneticAlgorithm.Logic;
 
@@ -17,14 +19,20 @@ namespace MattEland.FSharpGeneticAlgorithm.WindowsClient.ViewModels
             RandomizeCommand = new ActionCommand(RandomizeWorlds);
             AdvanceCommand = new ActionCommand(AdvanceToNextGeneration);
             Advance10Command = new ActionCommand(AdvanceToNext10Generation);
+            Advance100Command = new ActionCommand(AdvanceToNext100Generation);
 
             RandomizeWorlds();
             RandomizeBrains();
+
+            DispatcherTimer timer = new DispatcherTimer();
+            timer.Interval = TimeSpan.FromMilliseconds(200);
+            timer.Tick += (sender, e) => _brain.AdvanceTimer(); 
+            timer.Start();
         }
 
         private void RandomizeWorlds()
         {
-            _worlds = WorldGeneration.makeWorlds(_random, 10);
+            _worlds = WorldGeneration.makeWorlds(_random, 1);
             SimulateCurrentPopulation();
         }
 
@@ -64,6 +72,7 @@ namespace MattEland.FSharpGeneticAlgorithm.WindowsClient.ViewModels
         public ActionCommand RandomizeCommand { get; }
         public ActionCommand AdvanceCommand { get; }
         public ActionCommand Advance10Command { get; }
+        public ActionCommand Advance100Command { get; }
 
         public ObservableCollection<SimulationResultViewModel> Population { get; } =
             new ObservableCollection<SimulationResultViewModel>();
@@ -94,21 +103,26 @@ namespace MattEland.FSharpGeneticAlgorithm.WindowsClient.ViewModels
 
         private void AdvanceToNext10Generation()
         {
+            AdvanceGenerations(10);
+        }
+
+        private void AdvanceToNext100Generation()
+        {
+            AdvanceGenerations(100);
+        }
+
+        private void AdvanceGenerations(int numGenerations)
+        {
             var priorResults = Population.Select(p => p.Model).ToArray();
 
-            var generation = Genetics.Population.mutateAndSimulateMultiple(_random, _worlds, 10, priorResults);
+            var generation = Genetics.Population.mutateAndSimulateMultiple(_random, _worlds, numGenerations, priorResults);
 
             UpdatePopulation(generation);
         }
 
         private void AdvanceToNextGeneration()
         {
-            var priorResults = Population.Select(p => p.Model).ToArray();
-
-            var brains = Genetics.Population.mutateBrains(_random, priorResults.Select(r => r.brain).ToArray());
-            var generation = Genetics.Population.simulateGeneration(_worlds, brains).ToList();
-
-            UpdatePopulation(generation);
+            AdvanceGenerations(1);
         }
 
         private SimulationResultViewModel _brain;

@@ -16,7 +16,7 @@ let standardFitnessFunction (gameStates: GameState[]): float =
 
   let finalStateBonus =
     match lastState.SimState with
-    | SimulationState.Won  -> 1000.0 - (gameLength * 10.0) // Reward quick wins
+    | SimulationState.Won  -> 1000.0 - (gameLength * 25.0) // Reward quick wins
     | _ -> -50.0 + gameLength
 
   gotAcornBonus + finalStateBonus
@@ -31,15 +31,20 @@ let killRabbitFitnessFunction (gameStates: GameState[]): float =
     | true  -> 100.0 
     | false -> 0.0
 
+  let isSquirrelAlive = lastState.World.Squirrel.IsActive
+
+  let wonBonus = 
+    match lastState.SimState with 
+    | SimulationState.Won  -> 250.0 
+    | _ -> match isSquirrelAlive with
+           | true -> 0.0
+           | false -> -100.0 + gameLength
+
   let isRabbitAlive = lastState.World.Rabbit.IsActive
 
-  let finalStateBonus =
-    match lastState.SimState with
-    | SimulationState.Won  -> match isRabbitAlive with
-                              | false -> 1000.0 // Heavily reward dead rabbits
-                              | true -> 250.0 - (gameLength * 10.0) // Reward quick wins
-    | _ -> match isRabbitAlive with 
-           | true -> -50.0 + gameLength
-           | false -> gameLength
+  let rabbitBonus =
+    match isRabbitAlive with
+    | false -> 1000.0 - (gameLength * 5.0) // Heavily reward dead rabbits
+    | true -> 0.0
 
-  gotAcornBonus + finalStateBonus
+  gotAcornBonus + rabbitBonus + wonBonus
